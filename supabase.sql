@@ -1,6 +1,5 @@
 -- ============================================================
--- Learning Center v3 · 完整数据库结构
--- 复制全部, 粘贴到 Supabase SQL Editor, 点 Run
+-- Learning Center v4 · 完整数据库结构 (含位置字段)
 -- ============================================================
 
 DROP TABLE IF EXISTS lc_parent_students CASCADE;
@@ -32,7 +31,7 @@ CREATE TABLE lc_admins (
 );
 INSERT INTO lc_admins (username, password) VALUES ('Dixon168', '168168');
 
--- 2. 老师
+-- 2. 老师 (含位置, 以后可匹配本地家教)
 CREATE TABLE lc_teachers (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   username TEXT NOT NULL UNIQUE,
@@ -41,33 +40,57 @@ CREATE TABLE lc_teachers (
   email TEXT,
   avatar TEXT DEFAULT '👨‍🏫',
   preferred_language TEXT DEFAULT 'en',
+  country TEXT,
+  state TEXT,
+  city TEXT,
+  postal_code TEXT,
+  timezone TEXT,
+  subjects_taught TEXT[],
+  offers_tutoring BOOLEAN DEFAULT FALSE,
   active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   last_active TIMESTAMPTZ DEFAULT NOW()
 );
+CREATE INDEX idx_teachers_location ON lc_teachers(country, state, city);
 
--- 3. 家长 (邮箱+密码注册)
+-- 3. 家长 (邮箱+密码, 含位置)
 CREATE TABLE lc_parents (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email TEXT NOT NULL UNIQUE,
   password TEXT NOT NULL,
   display_name TEXT NOT NULL,
+  phone TEXT,
   avatar TEXT DEFAULT '👨‍👩‍👧',
   preferred_language TEXT DEFAULT 'en',
+  country TEXT,
+  state TEXT,
+  city TEXT,
+  postal_code TEXT,
+  timezone TEXT,
+  interested_in_tutoring BOOLEAN DEFAULT FALSE,
   active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   last_active TIMESTAMPTZ DEFAULT NOW()
 );
+CREATE INDEX idx_parents_location ON lc_parents(country, state, city);
 
--- 4. 学生 (用登录码登录, 无密码)
+-- 4. 学生 (登录码, 含位置)
 CREATE TABLE lc_students (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   login_code TEXT NOT NULL UNIQUE,
   name TEXT NOT NULL,
   avatar TEXT DEFAULT '👤',
   age_group TEXT,
+  birth_year INTEGER,
   credits INTEGER DEFAULT 200,
   preferred_language TEXT DEFAULT 'en',
+  country TEXT,
+  state TEXT,
+  city TEXT,
+  postal_code TEXT,
+  timezone TEXT,
+  school_name TEXT,
+  grade_level TEXT,
   created_by_teacher UUID REFERENCES lc_teachers(id) ON DELETE SET NULL,
   created_by_admin UUID REFERENCES lc_admins(id) ON DELETE SET NULL,
   active BOOLEAN DEFAULT TRUE,
@@ -75,8 +98,9 @@ CREATE TABLE lc_students (
   last_active TIMESTAMPTZ DEFAULT NOW()
 );
 CREATE INDEX idx_students_login_code ON lc_students(login_code);
+CREATE INDEX idx_students_location ON lc_students(country, state, city);
 
--- 5. 家长 ↔ 学生 (家长输入学生登录码绑定)
+-- 5. 家长 ↔ 学生 (绑定关系)
 CREATE TABLE lc_parent_students (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   parent_id UUID NOT NULL REFERENCES lc_parents(id) ON DELETE CASCADE,
@@ -271,4 +295,4 @@ CREATE POLICY "all_mistakes"        ON lc_mistakes        FOR ALL USING (true) W
 CREATE POLICY "all_credits_log"     ON lc_credits_log     FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "all_assignments"     ON lc_assignments     FOR ALL USING (true) WITH CHECK (true);
 
-SELECT 'Schema v3 created successfully (14 tables, multi-language, parent role)' AS status;
+SELECT 'Schema v4 created (14 tables + location fields for tutoring marketplace)' AS status;

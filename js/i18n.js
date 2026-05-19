@@ -194,7 +194,138 @@ const I18N = {
       es: 'La contraseña debe tener al menos 6 caracteres',
       ko: '비밀번호는 최소 6자 이상이어야 합니다',
       vi: 'Mật khẩu phải có ít nhất 6 ký tự'
-    }
+    },
+
+    'common.logout': {
+      en: 'Log out', cn: '退出', es: 'Salir', ko: '로그아웃', vi: 'Đăng xuất'
+    },
+    'admin.title': { en: 'Admin', cn: '管理', es: 'Admin', ko: '관리자', vi: 'Quản trị' },
+    'admin.title.em': { en: 'Dashboard', cn: '后台', es: 'Panel', ko: '대시보드', vi: 'Bảng' },
+    'admin.logout': { en: 'Log out', cn: '退出', es: 'Salir', ko: '로그아웃', vi: 'Thoát' },
+    'admin.tab.students': { en: 'Students', cn: '学生', es: 'Estudiantes', ko: '학생', vi: 'Học sinh' },
+    'admin.tab.teachers': { en: 'Teachers', cn: '老师', es: 'Profesores', ko: '교사', vi: 'Giáo viên' },
+    'admin.tab.parents': { en: 'Parents', cn: '家长', es: 'Padres', ko: '학부모', vi: 'Phụ huynh' },
+    'admin.tab.stats': { en: 'Stats', cn: '统计', es: 'Stats', ko: '통계', vi: 'Thống kê' },
+    'admin.new_student': { en: '+ New Student', cn: '+ 新学生', es: '+ Nuevo estudiante', ko: '+ 새 학생', vi: '+ Học sinh mới' },
+    'admin.new_teacher': { en: '+ New Teacher', cn: '+ 新老师', es: '+ Nuevo profesor', ko: '+ 새 교사', vi: '+ Giáo viên mới' },
+
+    'student.home.title': { en: 'Hi', cn: '你好', es: 'Hola', ko: '안녕', vi: 'Xin chào' },
+    'student.home.sub': {
+      en: 'How would you like to learn today?',
+      cn: '今天想怎么学习?',
+      es: '¿Cómo te gustaría aprender hoy?',
+      ko: '오늘 어떻게 배우고 싶나요?',
+      vi: 'Bạn muốn học như thế nào hôm nay?'
+    },
+    'student.choose_subject': {
+      en: 'Choose a subject', cn: '选一个科目', es: 'Elige una materia', ko: '과목 선택', vi: 'Chọn môn học'
+    },
+
+    'entry.recommended': { en: 'AI Recommended', cn: 'AI 推荐', es: 'IA recomienda', ko: 'AI 추천', vi: 'AI gợi ý' },
+    'entry.recommended.desc': { en: 'Topics picked for your age', cn: '按年龄挑选主题', es: 'Temas para tu edad', ko: '나이에 맞는 주제', vi: 'Chủ đề theo tuổi' },
+    'entry.ask': { en: 'Ask Anything', cn: '随意提问', es: 'Pregunta lo que quieras', ko: '무엇이든 물어보기', vi: 'Hỏi bất cứ điều gì' },
+    'entry.ask.desc': { en: 'Type your own question', cn: '自己输入问题', es: 'Escribe tu pregunta', ko: '직접 질문하기', vi: 'Tự đặt câu hỏi' },
+    'entry.assignment': { en: 'Assignments', cn: '老师作业', es: 'Tareas', ko: '과제', vi: 'Bài tập' },
+    'entry.assignment.desc': { en: 'From your teacher', cn: '老师布置的', es: 'De tu profesor', ko: '선생님이 내준', vi: 'Từ giáo viên' },
+
+    'age.title': { en: 'Select your <em>age</em>', cn: '选择 <em>年龄</em>', es: 'Selecciona tu <em>edad</em>', ko: '<em>나이</em> 선택', vi: 'Chọn <em>tuổi</em>' },
+    'age.sub': {
+      en: 'AI will teach in the right way for you',
+      cn: 'AI 会用最适合你的方式来讲解',
+      es: 'La IA enseñará a tu nivel',
+      ko: 'AI가 당신에게 맞게 가르칩니다',
+      vi: 'AI sẽ dạy phù hợp với bạn'
+    },
+    'age.3-6': { en: 'Toys & stories', cn: '玩具和故事', es: 'Juguetes y cuentos', ko: '장난감과 이야기', vi: 'Đồ chơi & truyện' },
+    'age.7-10': { en: 'Everyday examples', cn: '生活例子', es: 'Ejemplos cotidianos', ko: '일상 예시', vi: 'Ví dụ hàng ngày' },
+    'age.11-14': { en: 'Concepts & experiments', cn: '物理概念 + 实验', es: 'Conceptos y experimentos', ko: '개념과 실험', vi: 'Khái niệm & thí nghiệm' },
+    'age.15-18': { en: 'Formulas & applications', cn: '公式与应用', es: 'Fórmulas y aplicaciones', ko: '공식과 응용', vi: 'Công thức & ứng dụng' },
+    'age.adult': { en: 'Adult', cn: '成人', es: 'Adulto', ko: '성인', vi: 'Người lớn' },
+    'age.adult.desc': { en: 'In-depth technical', cn: '深入技术细节', es: 'Técnico avanzado', ko: '심층 기술', vi: 'Kỹ thuật chuyên sâu' },
+
+    'topic.title': { en: 'for you', cn: '推荐主题', es: 'para ti', ko: '추천', vi: 'cho bạn' },
+    'topic.title.em': { en: 'Topics', cn: 'AI', es: 'Temas', ko: '주제', vi: 'Chủ đề' },
+    'topic.sub': { en: 'Pick one, or type your own', cn: '选一个开始, 或自己输入', es: 'Elige uno o escribe el tuyo', ko: '하나 선택하거나 직접 입력', vi: 'Chọn một hoặc tự nhập' },
+    'topic.loading': { en: 'AI is picking topics...', cn: 'AI 正在推荐...', es: 'IA está eligiendo...', ko: 'AI가 주제를 고르는 중...', vi: 'AI đang chọn chủ đề...' },
+    'topic.custom_placeholder': {
+      en: 'Or type what you want to learn...',
+      cn: '或输入你想学的(火箭、手表、风车...)',
+      es: 'O escribe lo que quieres aprender...',
+      ko: '또는 배우고 싶은 것을 입력하세요',
+      vi: 'Hoặc nhập điều bạn muốn học...'
+    },
+    'topic.start': { en: 'Start', cn: '开始', es: 'Empezar', ko: '시작', vi: 'Bắt đầu' },
+    'topic.refresh': { en: '🔄 Refresh topics', cn: '🔄 换一批', es: '🔄 Refrescar', ko: '🔄 새로 고침', vi: '🔄 Làm mới' },
+
+    'ask.title': { en: 'Ask anything', cn: '问任何问题', es: 'Pregunta lo que sea', ko: '무엇이든 질문하기', vi: 'Hỏi bất cứ điều gì' },
+    'ask.sub': {
+      en: 'Type any question — AI will teach you step by step',
+      cn: '输入任何问题, AI 会一步步教你',
+      es: 'Escribe cualquier pregunta — la IA te enseñará paso a paso',
+      ko: '질문을 입력하세요 — AI가 단계별로 가르칩니다',
+      vi: 'Nhập câu hỏi — AI sẽ dạy bạn từng bước'
+    },
+    'ask.placeholder': {
+      en: 'e.g. Why do airplanes fly? How does a clock work?',
+      cn: '例如:飞机为什么能飞?手表怎么走?',
+      es: '¿Por qué vuelan los aviones? ¿Cómo funciona un reloj?',
+      ko: '예: 비행기는 왜 날까요? 시계는 어떻게 움직일까요?',
+      vi: 'VD: Vì sao máy bay bay được? Đồng hồ hoạt động ra sao?'
+    },
+    'ask.go': { en: 'Teach me', cn: '教我', es: 'Enséñame', ko: '가르쳐주세요', vi: 'Hãy dạy tôi' },
+
+    'chat.rephrase': { en: "🤔 I don't get it", cn: '🤔 我没懂', es: '🤔 No lo entiendo', ko: '🤔 이해 안 돼요', vi: '🤔 Không hiểu' },
+    'chat.example': { en: '💡 Example', cn: '💡 举例', es: '💡 Ejemplo', ko: '💡 예시', vi: '💡 Ví dụ' },
+    'chat.draw': { en: '🎨 Draw it', cn: '🎨 画给我看', es: '🎨 Dibújalo', ko: '🎨 그려줘', vi: '🎨 Vẽ ra' },
+    'chat.placeholder': {
+      en: 'Ask a question or ask AI to continue...',
+      cn: '问问题 或 让 AI 继续讲...',
+      es: 'Pregunta o pide a la IA que continúe...',
+      ko: '질문하거나 계속 가르쳐달라고 하세요',
+      vi: 'Hỏi hoặc yêu cầu AI tiếp tục...'
+    },
+    'chat.quiz': { en: "🎯 I'm ready for the quiz", cn: '🎯 来测验', es: '🎯 Listo para el quiz', ko: '🎯 퀴즈 시작', vi: '🎯 Sẵn sàng kiểm tra' },
+
+    'quiz.back': { en: 'Keep learning', cn: '继续学习', es: 'Seguir aprendiendo', ko: '계속 학습', vi: 'Tiếp tục học' },
+    'quiz.loading': { en: 'AI is creating questions...', cn: 'AI 正在出题...', es: 'IA está creando preguntas...', ko: 'AI가 문제를 만드는 중...', vi: 'AI đang tạo câu hỏi...' },
+    'quiz.question': { en: 'Question', cn: '第', es: 'Pregunta', ko: '문제', vi: 'Câu' },
+    'quiz.next': { en: 'Next →', cn: '下一题 →', es: 'Siguiente →', ko: '다음 →', vi: 'Tiếp →' },
+
+    'complete.title': { en: 'Great work!', cn: '学习完成!', es: '¡Buen trabajo!', ko: '훌륭해요!', vi: 'Tuyệt vời!' },
+    'complete.correct': { en: 'Correct', cn: '答对', es: 'Correctas', ko: '정답', vi: 'Đúng' },
+    'complete.earned': { en: 'Earned', cn: '赚到', es: 'Ganados', ko: '획득', vi: 'Kiếm được' },
+    'complete.total': { en: 'Total', cn: '总积分', es: 'Total', ko: '총합', vi: 'Tổng' },
+    'complete.learn_more': { en: 'Learn another topic', cn: '学另一个主题', es: 'Aprender otro tema', ko: '다른 주제', vi: 'Học chủ đề khác' },
+    'complete.home': { en: 'Back home', cn: '回到主页', es: 'Volver al inicio', ko: '홈으로', vi: 'Về trang chủ' },
+
+    // Form labels
+    'form.new_student': { en: 'Create New Student', cn: '创建新学生', es: 'Crear nuevo estudiante', ko: '새 학생 생성', vi: 'Tạo học sinh mới' },
+    'form.new_student.sub': { en: 'A login code will be generated automatically', cn: '系统会自动生成登录码', es: 'Se generará un código automáticamente', ko: '로그인 코드가 자동 생성됩니다', vi: 'Mã đăng nhập sẽ được tạo tự động' },
+    'form.edit_student': { en: 'Edit Student', cn: '编辑学生', es: 'Editar estudiante', ko: '학생 편집', vi: 'Chỉnh sửa học sinh' },
+    'form.new_teacher': { en: 'Create Teacher Account', cn: '创建老师账号', es: 'Crear cuenta de profesor', ko: '교사 계정 생성', vi: 'Tạo tài khoản giáo viên' },
+    'form.name': { en: 'Name', cn: '名字', es: 'Nombre', ko: '이름', vi: 'Tên' },
+    'form.age_group': { en: 'Age Group', cn: '年龄段', es: 'Grupo de edad', ko: '연령대', vi: 'Nhóm tuổi' },
+    'form.birth_year': { en: 'Birth Year', cn: '出生年', es: 'Año de nacimiento', ko: '생년', vi: 'Năm sinh' },
+    'form.language': { en: 'Language', cn: '语言', es: 'Idioma', ko: '언어', vi: 'Ngôn ngữ' },
+    'form.credits': { en: 'Starting Credits', cn: '初始积分', es: 'Créditos iniciales', ko: '시작 크레딧', vi: 'Tín chỉ khởi đầu' },
+    'form.avatar': { en: 'Avatar', cn: '头像', es: 'Avatar', ko: '아바타', vi: 'Ảnh đại diện' },
+    'form.location': { en: 'Location (optional)', cn: '位置(选填)', es: 'Ubicación (opcional)', ko: '위치 (선택)', vi: 'Vị trí (tùy chọn)' },
+    'form.country': { en: 'Country', cn: '国家', es: 'País', ko: '국가', vi: 'Quốc gia' },
+    'form.state': { en: 'State / Province', cn: '州/省', es: 'Estado/Provincia', ko: '주/도', vi: 'Bang/Tỉnh' },
+    'form.city': { en: 'City', cn: '城市', es: 'Ciudad', ko: '도시', vi: 'Thành phố' },
+    'form.postal': { en: 'Postal Code', cn: '邮编', es: 'Código postal', ko: '우편번호', vi: 'Mã bưu điện' },
+    'form.school': { en: 'School (optional)', cn: '学校(选填)', es: 'Escuela (opcional)', ko: '학교 (선택)', vi: 'Trường (tùy chọn)' },
+    'form.grade': { en: 'Grade (optional)', cn: '年级(选填)', es: 'Grado (opcional)', ko: '학년 (선택)', vi: 'Lớp (tùy chọn)' },
+    'form.create': { en: 'Create', cn: '创建', es: 'Crear', ko: '생성', vi: 'Tạo' },
+    'form.login_code': { en: 'Login Code', cn: '登录码', es: 'Código de acceso', ko: '로그인 코드', vi: 'Mã đăng nhập' },
+    'form.copy': { en: 'Copy', cn: '复制', es: 'Copiar', ko: '복사', vi: 'Sao chép' },
+
+    'stat.students': { en: 'Students', cn: '学生数', es: 'Estudiantes', ko: '학생', vi: 'Học sinh' },
+    'stat.teachers': { en: 'Teachers', cn: '老师数', es: 'Profesores', ko: '교사', vi: 'Giáo viên' },
+    'stat.parents': { en: 'Parents', cn: '家长数', es: 'Padres', ko: '학부모', vi: 'Phụ huynh' },
+    'stat.sessions': { en: 'Sessions', cn: '学习次数', es: 'Sesiones', ko: '세션', vi: 'Phiên học' },
+
+    'subject.coming_soon': { en: 'Coming soon!', cn: '敬请期待', es: '¡Próximamente!', ko: '곧 출시', vi: 'Sắp ra mắt' }
   },
 
   init() {

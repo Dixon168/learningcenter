@@ -7,23 +7,28 @@ document.addEventListener('DOMContentLoaded', () => {
   bindTeacherLogin();
   bindAdminLogin();
   bindAuthTabs();
+  Admin.bindEvents();
+  Student.bindEvents();
+
+  // restore session if active
+  const s = Session.load();
+  if (s) {
+    if (s.role === 'admin') Admin.enter(s.user);
+    else if (s.role === 'student') Student.enter(s.user);
+    // parent/teacher dashboards not built yet
+  }
 });
 
 function bindLangSwitcher() {
   const btn = document.getElementById('lang-toggle');
   const drop = document.getElementById('lang-dropdown');
-
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
     drop.classList.toggle('open');
   });
-
   document.addEventListener('click', (e) => {
-    if (!drop.contains(e.target) && e.target !== btn) {
-      drop.classList.remove('open');
-    }
+    if (!drop.contains(e.target) && e.target !== btn) drop.classList.remove('open');
   });
-
   document.querySelectorAll('.lang-option').forEach(opt => {
     opt.addEventListener('click', () => {
       I18N.set(opt.dataset.lang);
@@ -41,7 +46,6 @@ function bindRoleCards() {
       else if (role === 'teacher') UI.showPage('pg-teacher-login');
     };
   });
-
   document.querySelectorAll('.page-back').forEach(btn => {
     btn.onclick = () => UI.showPage(btn.dataset.back);
   });
@@ -49,31 +53,21 @@ function bindRoleCards() {
 
 function bindStudentLogin() {
   const input = document.getElementById('student-code-input');
-  input.addEventListener('input', e => {
-    e.target.value = e.target.value.toUpperCase();
-  });
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') Auth.loginStudent();
-  });
+  input.addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') Auth.loginStudent(); });
   document.getElementById('btn-student-login').onclick = () => Auth.loginStudent();
 }
 
 function bindParentLogin() {
   document.getElementById('btn-parent-login').onclick = () => Auth.loginParent();
   document.getElementById('btn-parent-signup').onclick = () => Auth.signupParent();
-  document.getElementById('parent-login-password').addEventListener('keydown', e => {
-    if (e.key === 'Enter') Auth.loginParent();
-  });
-  document.getElementById('parent-signup-password').addEventListener('keydown', e => {
-    if (e.key === 'Enter') Auth.signupParent();
-  });
+  document.getElementById('parent-login-password').addEventListener('keydown', e => { if (e.key === 'Enter') Auth.loginParent(); });
+  document.getElementById('parent-signup-password').addEventListener('keydown', e => { if (e.key === 'Enter') Auth.signupParent(); });
 }
 
 function bindTeacherLogin() {
   document.getElementById('btn-teacher-login').onclick = () => Auth.loginTeacher();
-  document.getElementById('teacher-password').addEventListener('keydown', e => {
-    if (e.key === 'Enter') Auth.loginTeacher();
-  });
+  document.getElementById('teacher-password').addEventListener('keydown', e => { if (e.key === 'Enter') Auth.loginTeacher(); });
 }
 
 function bindAdminLogin() {
@@ -85,9 +79,7 @@ function bindAdminLogin() {
   };
   document.getElementById('btn-cancel-admin').onclick = () => UI.hideModal('modal-admin-login');
   document.getElementById('btn-do-admin-login').onclick = () => Auth.loginAdmin();
-  document.getElementById('admin-password').addEventListener('keydown', e => {
-    if (e.key === 'Enter') Auth.loginAdmin();
-  });
+  document.getElementById('admin-password').addEventListener('keydown', e => { if (e.key === 'Enter') Auth.loginAdmin(); });
 }
 
 function bindAuthTabs() {

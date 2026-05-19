@@ -125,3 +125,123 @@ const DB = {
     return data || [];
   }
 };
+
+// ============================================
+// Admin / Sessions / Learning
+// ============================================
+
+Object.assign(DB, {
+  async getAllParents() {
+    const { data } = await supabase.from('lc_parents').select('*').order('created_at', { ascending: false });
+    return data || [];
+  },
+
+  async getStats() {
+    const [s, t, p, sess] = await Promise.all([
+      supabase.from('lc_students').select('*', { count: 'exact', head: true }),
+      supabase.from('lc_teachers').select('*', { count: 'exact', head: true }),
+      supabase.from('lc_parents').select('*', { count: 'exact', head: true }),
+      supabase.from('lc_sessions').select('*', { count: 'exact', head: true })
+    ]);
+    return {
+      students: s.count || 0,
+      teachers: t.count || 0,
+      parents: p.count || 0,
+      sessions: sess.count || 0
+    };
+  },
+
+  // ============ Sessions ============
+  async startSession({ studentId, subjectId, topic, ageGroup, language, entryMode, assignmentId }) {
+    const { data, error } = await supabase.from('lc_sessions').insert({
+      student_id: studentId,
+      subject_id: subjectId,
+      topic,
+      age_group: ageGroup,
+      language: language || 'en',
+      entry_mode: entryMode,
+      assignment_id: assignmentId || null
+    }).select().single();
+    if (error) console.error('startSession:', error);
+    return data;
+  },
+
+  async completeSession(sessionId, score, total, creditsEarned) {
+    await supabase.from('lc_sessions').update({
+      status: 'completed',
+      quiz_score: score,
+      quiz_total: total,
+      credits_earned: creditsEarned,
+      completed_at: new Date().toISOString()
+    }).eq('id', sessionId);
+  },
+
+  async saveMessage(sessionId, role, content, extras = {}) {
+    await supabase.from('lc_messages').insert({
+      session_id: sessionId,
+      role,
+      content,
+      has_svg: extras.has_svg || false,
+      svg_content: extras.svg_content || null,
+      svg_template: extras.svg_template || null,
+      svg_params: extras.svg_params || null,
+      action_type: extras.action_type || null
+    });
+  },
+
+  async saveQuiz(sessionId, qNum, question, options, correctIdx, explanation, has_svg, svg_content) {
+    const { data } = await supabase.from('lc_quizzes').insert({
+      session_id: sessionId,
+      question_num: qNum,
+      question_text: question,
+      options,
+      correct_index: correctIdx,
+      explanation,
+      has_svg: has_svg || false,
+      svg_content: svg_content || null
+    }).select().single();
+    return data;
+  },
+
+  async answerQuiz(quizId, studentAnswer, isCorrect) {
+    await supabase.from('lc_quizzes').update({
+      student_answer: studentAnswer,
+      is_correct: isCorrect,
+      answered_at: new Date().toISOString()
+    }).eq('id', quizId);
+  },
+
+  // ============ Mistakes ============
+  async saveMistake({ studentId, quizId, subjectId, topic, questionText, wrongAnswer, correctAnswer, aiAnalysis, knowledgeGap }) {
+    await supabase.from('lc_mistakes').insert({
+      student_id: studentId,
+      quiz_id: quizId,
+      subject_id: subjectId,
+      topic,
+      question_text: questionText,
+      wrong_answer: wrongAnswer,
+      correct_answer: correctAnswer,
+      ai_analysis: aiAnalysis,
+      knowledge_gap: knowledgeGap
+    });
+  },
+
+  // ============ Credits ============
+  async changeCredits(studentId, amount, reason, sessionId = null) {
+    await supabase.from('lc_credits_log').insert({
+      student_id: studentId,
+      amount,
+      reason,
+      session_id: sessionId
+    });
+    const student = await this.getStudent(studentId);
+    const newCredits = (student.credits || 0) + amount;
+    await supabase.from('lc_students').update({ credits: newCredits }).eq('id', studentId);
+    return newCredits;
+  },
+
+  async getStudent(id) {
+    const { data } = await supabase.from('lc_students').select('*').eq('id', id).single();
+    return data;
+  }
+});
