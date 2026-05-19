@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Learning Center</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ============ 主页: 四角色入口 ============ -->
+  <section id="pg-home" class="page active">
+    <!-- 语言切换 (右上角) -->
+    <div class="lang-switcher">
+      <button class="lang-btn" id="lang-toggle">
+        <span id="lang-current-flag">🇬🇧</span>
+        <span id="lang-current-name">English</span>
+        <span class="lang-chevron">▾</span>
+      </button>
+      <div class="lang-dropdown" id="lang-dropdown">
+        <button class="lang-option" data-lang="en"><span>🇬🇧</span> English</button>
+        <button class="lang-option" data-lang="cn"><span>🇨🇳</span> 中文</button>
+        <button class="lang-option" data-lang="es"><span>🇪🇸</span> Español</button>
+        <button class="lang-option" data-lang="ko"><span>🇰🇷</span> 한국어</button>
+        <button class="lang-option" data-lang="vi"><span>🇻🇳</span> Tiếng Việt</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <header class="brand-header">
+        <div class="logo-mark">LC</div>
+        <h1 class="brand-title">Learning <em>Center</em></h1>
+        <p class="brand-sub" data-i18n="tagline">Teach to understand · not just to answer</p>
+      </header>
+
+      <div class="role-grid">
+        <button class="role-card" data-role="student">
+          <div class="role-icon">🎓</div>
+          <h3 data-i18n="role.student">Student</h3>
+          <p data-i18n="role.student.desc">Enter with your login code</p>
+        </button>
+        <button class="role-card" data-role="parent">
+          <div class="role-icon">👨‍👩‍👧</div>
+          <h3 data-i18n="role.parent">Parent</h3>
+          <p data-i18n="role.parent.desc">Monitor your child's progress</p>
+        </button>
+        <button class="role-card" data-role="teacher">
+          <div class="role-icon">👨‍🏫</div>
+          <h3 data-i18n="role.teacher">Teacher</h3>
+          <p data-i18n="role.teacher.desc">Manage classes and assignments</p>
+        </button>
+      </div>
+
+      <p class="home-footnote" data-i18n="home.footnote">An AI guided learning system · powered by curiosity</p>
+    </div>
+
+    <button id="admin-gear" class="admin-gear" title="Admin">⚙</button>
+  </section>
+
+  <!-- ============ 学生登录 (登录码) ============ -->
+  <section id="pg-student-login" class="page">
+    <button class="page-back" data-back="pg-home">←</button>
+    <div class="container">
+      <div class="login-box">
+        <div class="login-icon">🎓</div>
+        <h2 class="login-title" data-i18n="student.login.title">Student Login</h2>
+        <p class="login-sub" data-i18n="student.login.sub">Enter your login code to start learning</p>
+        <input type="text" id="student-code-input" class="big-input code-input" placeholder="LION-2024" maxlength="9" autocomplete="off" />
+        <button id="btn-student-login" class="btn-primary btn-block" data-i18n="student.login.btn">Start Learning</button>
+        <p class="login-hint" data-i18n="student.login.hint">No code yet? Ask your teacher or parent</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 家长登录 / 注册 ============ -->
+  <section id="pg-parent-login" class="page">
+    <button class="page-back" data-back="pg-home">←</button>
+    <div class="container">
+      <div class="login-box">
+        <div class="login-icon">👨‍👩‍👧</div>
+        <h2 class="login-title" data-i18n="parent.login.title">Parent Portal</h2>
+
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-auth-tab="login" data-i18n="auth.tab.login">Log In</button>
+          <button class="auth-tab" data-auth-tab="signup" data-i18n="auth.tab.signup">Sign Up</button>
+        </div>
+
+        <div id="parent-login-form" class="auth-form active">
+          <input type="email" id="parent-login-email" class="big-input" placeholder="your@email.com" autocomplete="email" />
+          <input type="password" id="parent-login-password" class="big-input" placeholder="Password" autocomplete="current-password" />
+          <button id="btn-parent-login" class="btn-primary btn-block" data-i18n="parent.login.btn">Log In</button>
+        </div>
+
+        <div id="parent-signup-form" class="auth-form">
+          <input type="text" id="parent-signup-name" class="big-input" placeholder="Your Name" autocomplete="name" />
+          <input type="email" id="parent-signup-email" class="big-input" placeholder="your@email.com" autocomplete="email" />
+          <input type="password" id="parent-signup-password" class="big-input" placeholder="Password (min 6 chars)" minlength="6" autocomplete="new-password" />
+          <button id="btn-parent-signup" class="btn-primary btn-block" data-i18n="parent.signup.btn">Create Account</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 老师登录 ============ -->
+  <section id="pg-teacher-login" class="page">
+    <button class="page-back" data-back="pg-home">←</button>
+    <div class="container">
+      <div class="login-box">
+        <div class="login-icon">👨‍🏫</div>
+        <h2 class="login-title" data-i18n="teacher.login.title">Teacher Portal</h2>
+        <p class="login-sub" data-i18n="teacher.login.sub">Sign in to manage your classes</p>
+        <input type="text" id="teacher-username" class="big-input" placeholder="Username" autocomplete="username" />
+        <input type="password" id="teacher-password" class="big-input" placeholder="Password" autocomplete="current-password" />
+        <button id="btn-teacher-login" class="btn-primary btn-block" data-i18n="teacher.login.btn">Log In</button>
+        <p class="login-hint" data-i18n="teacher.login.hint">Need an account? Contact the administrator</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 管理员登录 (模态框) ============ -->
+  <div id="modal-admin-login" class="modal">
+    <div class="modal-content">
+      <h3 data-i18n="admin.login.title">Administrator Login</h3>
+      <p class="modal-sub" data-i18n="admin.login.sub">Enter administrator credentials</p>
+      <input type="text" id="admin-username" class="big-input" placeholder="Username" autocomplete="username" />
+      <input type="password" id="admin-password" class="big-input" placeholder="Password" autocomplete="current-password" />
+      <div class="modal-actions">
+        <button class="btn-secondary" id="btn-cancel-admin" data-i18n="common.cancel">Cancel</button>
+        <button class="btn-primary" id="btn-do-admin-login" data-i18n="common.login">Log In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 占位: 后续 Task 会加学生/老师/家长/管理员后台页面 -->
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
