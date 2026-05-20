@@ -8,6 +8,13 @@ const CONFIG = {
     COMPLETE_BONUS: 50
   },
   QUIZ_COUNT: 5,
+  QUIZ_COUNT_BY_AGE: {
+    '3-6': 3,
+    '7-10': 4,
+    '11-14': 5,
+    '15-18': 6,
+    'adult': 8
+  },
   DEFAULT_LANGUAGE: 'en',
   SUPPORTED_LANGUAGES: ['en', 'cn', 'es', 'ko', 'vi']
 };

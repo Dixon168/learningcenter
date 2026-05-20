@@ -8,11 +8,35 @@ const AI = {
   },
 
   AGE_GUIDANCE: {
-    '3-6': 'Ages 3-6. Use simple words a young child knows. Use toys, animals, stories. Ask "imagine that..." Sentences must be short. No formulas. Lots of encouragement.',
-    '7-10': 'Ages 7-10. Use familiar everyday examples (bicycles, toy cars, household appliances). Explain principles in plain language without complex jargon. Keep enthusiasm.',
-    '11-14': 'Ages 11-14. Introduce physics concepts (force, energy, motion). Encourage hands-on experiments. Diagrams help. Some formulas are OK.',
-    '15-18': 'Ages 15-18. Use basic physics formulas and engineering thinking. Discuss real applications. Historical context is welcome.',
-    'adult': 'Adult. Deep technical principles. Industry applications, design tradeoffs, frontiers of the field. Professional but clear language.'
+    '3-6': `Ages 3-6 (very young child). STRICT RULES:
+- Use ONLY simple words a 5-year-old knows. If a word is longer than 3 syllables, find an easier one.
+- Sentences must be SHORT (under 10 words).
+- NEVER use technical terms, numbers in formulas, or measurements.
+- Explain everything with toys, animals, food, playgrounds, cartoons.
+- Use lots of "imagine..." and "have you ever seen...".
+- Be playful and warm, like reading a bedtime story. Lots of "Wow!" and "Great job!".
+- Example for "gear": "Imagine two round cookies with bumpy edges. When one cookie turns, its bumps push the other cookie and IT turns too! That's a gear — they help each other spin."`,
+    '7-10': `Ages 7-10 (elementary). STRICT RULES:
+- Use plain everyday language. Define any new word right away in simple terms.
+- Use familiar examples: bicycles, toy cars, door handles, scissors, swings.
+- NO formulas yet. You can use simple numbers ("2 times faster").
+- Keep sentences clear and not too long. Stay enthusiastic and curious.
+- Example for "gear": "You know how a bike has those spiky wheels the chain sits on? Those are gears! A small gear spinning a big gear is like a small kid pushing a big merry-go-round — the big one turns slower but stronger."`,
+    '11-14': `Ages 11-14 (middle school). RULES:
+- Introduce real concepts: force, energy, motion, ratio. Define terms clearly.
+- Simple formulas are OK (gear ratio = teeth1/teeth2). Always explain what each part means.
+- Encourage "what do you think would happen if..." experiments.
+- Connect to things they know: bikes with gears, game controllers, skateboards.`,
+    '15-18': `Ages 15-18 (high school). RULES:
+- Use proper physics terms and formulas (torque, mechanical advantage, efficiency).
+- Show worked examples with real numbers and units.
+- Discuss real-world engineering applications and tradeoffs.
+- Treat them as capable young adults; historical/context detail is welcome.`,
+    'adult': `Adult learner. RULES:
+- Use precise technical vocabulary and proper engineering terminology.
+- Go into depth: design tradeoffs, materials, real industry practice, edge cases.
+- Reference standards, efficiency calculations, and practical constraints.
+- Respect their intelligence; be clear and professional, not condescending.`
   },
 
   async call(messages, system) {
@@ -66,6 +90,12 @@ const AI = {
 
     return `You are Spark ⚡, a warm and curious AI learning companion teaching ${subjectName}. You are not a cold tool — you're like an enthusiastic big brother/sister who loves this subject and genuinely cares about the student. You celebrate their wins, encourage them when stuck, and make learning feel like an adventure.
 
+⚠️ MOST IMPORTANT RULE — MATCH THE STUDENT'S AGE:
+Before you write ANYTHING, remember who you are talking to and pitch every word, example, and sentence to their level. A 5-year-old and an adult must NEVER get the same explanation. Getting this wrong (using hard words with a little kid, or being childish with a teenager) is the worst mistake you can make.
+
+THIS STUDENT'S LEVEL:
+${ageHelp}
+
 YOUR PERSONALITY:
 - Warm, upbeat, curious. You get excited about cool ideas.
 - You use the student's name when you know it.
@@ -78,10 +108,10 @@ YOUR TEACHING STYLE (Socratic / guided):
 - Don't just give answers. Lead the student to discover them.
 - Explain a small piece, then ask a question to check understanding.
 - When the student asks something, first invite their thinking: "What do you think?"
-- Use 3-4 short paragraphs per reply (not a wall of text).
+- Use 3-4 short paragraphs per reply (not a wall of text), but for very young kids use even shorter chunks.
 - Use **bold** for key terms.
 
-AGE LEVEL: ${ageHelp}
+AGE LEVEL: (see the student's level rule at the top — always follow it)
 
 VISUAL AIDS — Include SVG diagrams when they help. End your message with ONE tag like:
 [SVG:gear teeth1=12 teeth2=6]
@@ -168,6 +198,53 @@ Pick concrete, visual, hands-on topics. Names must be in ${langName} and short (
     const system = this.buildSystemPrompt(subject, ageGroup, language, topic, memory);
     const messages = [...history, { role: 'user', content: "Can you draw a picture to help me see it? Use an SVG tag." }];
     return await this.call(messages, system);
+  },
+
+  async generateQuiz(subject, ageGroup, language, topic, history) {
+    const langName = this.LANG_NAMES[language] || 'English';
+    const ageHelp = this.AGE_GUIDANCE[ageGroup] || '';
+    const count = (CONFIG.QUIZ_COUNT_BY_AGE && CONFIG.QUIZ_COUNT_BY_AGE[ageGroup]) || CONFIG.QUIZ_COUNT || 5;
+
+    // Use the recent conversation so questions match what was actually taught
+    const recent = (history || []).slice(-6).map(m => {
+      const who = (m.role === 'assistant') ? 'Tutor' : 'Student';
+      return `${who}: ${m.content}`;
+    }).join('\n');
+
+    const prompt = `You are writing a short quiz to check understanding of "${topic}".
+
+THE STUDENT'S LEVEL (match question difficulty AND wording to this exactly):
+${ageHelp}
+
+${recent ? `What was just taught:\n${recent}\n` : ''}
+Write exactly ${count} multiple-choice questions IN ${langName}.
+
+STRICT RULES:
+- Difficulty, vocabulary, and examples MUST match the student's level above. For young children use very simple wording and everyday objects; for older/adult learners use proper terms.
+- Each question has exactly 4 options.
+- Test real understanding of "${topic}", not trick questions or memorization of exact words.
+- Keep questions and options SHORT and clear.
+- Include a one-sentence kid-friendly explanation of the right answer (in ${langName}).
+
+Output STRICT JSON only, no extra text:
+{"questions":[{"q":"question text","options":["A","B","C","D"],"correct":0,"explain":"why this is right"}]}
+"correct" is the 0-based index of the right option.`;
+
+    const { content, error } = await this.call(
+      [{ role: 'user', content: prompt }],
+      `You write age-appropriate quizzes. Output ONLY valid JSON in ${langName}.`
+    );
+    if (error) return null;
+    try {
+      const clean = content.replace(/```json|```/g, '').trim();
+      const parsed = JSON.parse(clean);
+      const qs = parsed.questions || [];
+      // basic validation
+      return qs.filter(q => q.q && Array.isArray(q.options) && q.options.length === 4 && typeof q.correct === 'number');
+    } catch (e) {
+      console.error('parse quiz:', e, content);
+      return null;
+    }
   },
 
   async generateReport(subject, ageGroup, language, topic, quizQuestions, score, total) {
