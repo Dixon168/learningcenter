@@ -66,5 +66,52 @@ const Generator = {
 
   cancel() {
     this.cancelRequested = true;
+  },
+
+  // ============================================
+  // Background "trickle" generation
+  // Called quietly when a student is using the app.
+  // Generates a tiny number of missing lessons in the student's language,
+  // silently in the background. No UI, no cost beyond a couple lessons.
+  // Self-throttled: at most once per session, only 1-2 lessons.
+  // ============================================
+  _trickledThisSession: false,
+
+  async trickle(subject, language = 'en', count = 2) {
+    // Only run once per session, and never while a manual batch is running
+    if (this._trickledThisSession || this.running) return;
+    this._trickledThisSession = true;
+
+    try {
+      const missing = await DB.getMissingLessons(subject.id, language);
+      if (!missing || missing.length === 0) return;
+
+      const todo = missing.slice(0, count);
+      for (const item of todo) {
+        // bail out if a manual batch started in the meantime
+        if (this.running) break;
+        try {
+          const result = await AI.startTeaching(
+            subject.slug, item.ageGroup, language, item.title, false, null
+          );
+          if (result.content && !result.error) {
+            await DB.saveCachedLesson({
+              subjectId: subject.id,
+              topicId: item.topicId,
+              topicTitle: item.title,
+              ageGroup: item.ageGroup,
+              language,
+              intro: result.content
+            });
+          }
+        } catch (e) {
+          console.warn('trickle gen skipped:', item.title, e);
+        }
+        // gentle pause between
+        await new Promise(r => setTimeout(r, 800));
+      }
+    } catch (e) {
+      console.warn('trickle failed quietly:', e);
+    }
   }
 };

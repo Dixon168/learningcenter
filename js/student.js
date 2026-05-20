@@ -22,6 +22,18 @@ const Student = {
     UI.showPage('pg-student-home');
     await this.loadSubjects();
     await this.refreshHome();
+
+    // Quietly fill the lesson library in the background while the student
+    // browses the home page. No UI, capped at 2 lessons/session, only fills
+    // gaps in the student's own language. Self-funds the library via real use.
+    setTimeout(() => {
+      DB.getEnabledSubjects().then(subjects => {
+        if (subjects && subjects.length) {
+          const lang = user.preferred_language || I18N.current;
+          Generator.trickle(subjects[0], lang, 2);
+        }
+      });
+    }, 5000);
   },
 
   updateCreditsDisplay(c) {
