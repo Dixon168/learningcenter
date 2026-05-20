@@ -84,6 +84,34 @@ const Teacher = {
       `${students.length} students` + (c.age_group ? ` · ${c.age_group}` : '');
     UI.showPage('pg-class-detail');
     this.loadClassStudents();
+    this.loadClassAnalytics();
+  },
+
+  async loadClassAnalytics() {
+    const activity = await DB.getClassActivity(this.currentClassId);
+    document.getElementById('class-active-today').textContent = activity.activeToday;
+    document.getElementById('class-total-sessions').textContent = activity.totalSessions;
+
+    const weak = await DB.getClassWeakTopics(this.currentClassId);
+    const wrap = document.getElementById('class-heatmap');
+    if (weak.length === 0) {
+      wrap.innerHTML = '<p style="color:#8a7d6f;font-size:13px;padding:8px 0;">No completed sessions yet.</p>';
+      return;
+    }
+    wrap.innerHTML = '';
+    weak.slice(0, 8).forEach(t => {
+      const color = t.accuracy >= 70 ? 'var(--accent-forest)' : t.accuracy >= 40 ? 'var(--accent-ochre)' : 'var(--accent-rust)';
+      const row = document.createElement('div');
+      row.className = 'heatmap-row';
+      row.innerHTML = `
+        <span class="heatmap-topic">${UI.escapeHtml(t.topic)} <span style="color:#8a7d6f;font-size:11px;">(${t.attempts}×)</span></span>
+        <div class="heatmap-bar-wrap">
+          <div class="heatmap-bar"><div class="heatmap-fill" style="width:${t.accuracy}%;background:${color};"></div></div>
+          <span class="heatmap-pct" style="color:${color};">${t.accuracy}%</span>
+        </div>
+      `;
+      wrap.appendChild(row);
+    });
   },
 
   async loadClassStudents() {

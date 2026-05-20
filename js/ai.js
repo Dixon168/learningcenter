@@ -147,33 +147,36 @@ Pick concrete, visual, hands-on topics. Names must be in ${langName} and short (
     return await this.call(messages, system);
   },
 
-  async generateQuiz(subject, ageGroup, language, topic, history) {
+  async generateReport(subject, ageGroup, language, topic, quizQuestions, score, total) {
     const langName = this.LANG_NAMES[language] || 'English';
-    const recent = history.slice(-6).map(m => `${m.role === 'student' || m.role === 'user' ? 'Student' : 'Tutor'}: ${m.content}`).join('\n');
+    const wrongList = quizQuestions
+      .filter((q, i) => q._studentWrong)
+      .map(q => `- ${q.q} (correct: ${q.options[q.correct]})`)
+      .join('\n') || 'None — all correct!';
 
-    const prompt = `Based on this tutoring session about "${topic}", create ${CONFIG.QUIZ_COUNT} multiple-choice questions to test understanding.
+    const prompt = `A student just finished learning "${topic}" and scored ${score}/${total} on the quiz.
 
-Recent dialogue:
-${recent}
+Questions they got WRONG:
+${wrongList}
 
-Requirements:
-- All text in ${langName}
-- Difficulty matches age ${ageGroup}
-- 4 options each
-- Test understanding, not memorization
-- Include a short explanation for each
+Write a short, warm learning report FOR THE PARENT in ${langName}. Structure it as STRICT JSON only:
+{
+  "summary": "<1 sentence: how the child did overall, encouraging tone>",
+  "strengths": "<1 sentence: what the child understood well>",
+  "focus_areas": "<1 sentence: what to practice more, specific>",
+  "suggestion": "<1 sentence: a concrete next step or whether extra help would benefit them>",
+  "understanding_level": <integer 1-5, how well they grasped the topic>
+}
 
-Output STRICT JSON only:
-{"questions":[{"q":"<question>","options":["<A>","<B>","<C>","<D>"],"correct":0,"explain":"<why>"}, ... ${CONFIG.QUIZ_COUNT} items]}`;
+Keep each field under 25 words. Warm, parent-friendly, not clinical.`;
 
     const { content, error } = await this.call([{ role: 'user', content: prompt }], 'Output JSON only.');
     if (error) return null;
     try {
       const clean = content.replace(/```json|```/g, '').trim();
-      const parsed = JSON.parse(clean);
-      return parsed.questions || [];
+      return JSON.parse(clean);
     } catch (e) {
-      console.error('parse quiz:', e, content);
+      console.error('parse report:', e, content);
       return null;
     }
   }

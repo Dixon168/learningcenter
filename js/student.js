@@ -368,6 +368,7 @@ const Student = {
       else if (i === choice) b.classList.add('wrong');
     });
     const isCorrect = choice === q.correct;
+    if (!isCorrect) q._studentWrong = true;
     const fb = document.getElementById('quiz-feedback');
     fb.className = 'quiz-feedback show ' + (isCorrect ? 'correct' : 'wrong');
     fb.innerHTML = (isCorrect ? '✅ Correct!' : '❌ Not quite.') + '<br>' + UI.escapeHtml(q.explain || '');
@@ -426,6 +427,37 @@ const Student = {
     document.getElementById('stat-earned').textContent = earned;
     document.getElementById('stat-total').textContent = nc;
     UI.showPage('pg-complete');
+
+    // Generate AI learning report (the conversion hook)
+    const reportBox = document.getElementById('report-box');
+    reportBox.style.display = 'block';
+    document.getElementById('report-content').innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
+
+    const report = await AI.generateReport(
+      this.state.subject.slug,
+      this.state.ageGroup,
+      this.state.user.preferred_language || I18N.current,
+      this.state.topic,
+      this.state.quizQuestions,
+      this.state.quizScore,
+      this.state.quizQuestions.length
+    );
+
+    if (report) {
+      if (this.state.sessionId) {
+        await DB.saveReport(this.state.sessionId, report, report.understanding_level);
+      }
+      const stars = '⭐'.repeat(report.understanding_level || 3) + '☆'.repeat(5 - (report.understanding_level || 3));
+      document.getElementById('report-content').innerHTML = `
+        <div class="report-stars">${stars}</div>
+        <div class="report-row"><span class="report-label">📋 ${I18N.t('report.summary')}</span><span class="report-text">${UI.escapeHtml(report.summary || '')}</span></div>
+        <div class="report-row"><span class="report-label">💪 ${I18N.t('report.strengths')}</span><span class="report-text">${UI.escapeHtml(report.strengths || '')}</span></div>
+        <div class="report-row"><span class="report-label">🎯 ${I18N.t('report.focus')}</span><span class="report-text">${UI.escapeHtml(report.focus_areas || '')}</span></div>
+        <div class="report-row report-suggestion"><span class="report-label">💡 ${I18N.t('report.suggestion')}</span><span class="report-text">${UI.escapeHtml(report.suggestion || '')}</span></div>
+      `;
+    } else {
+      reportBox.style.display = 'none';
+    }
   },
 
   bindEvents() {
@@ -476,7 +508,35 @@ const Student = {
     // My Mistakes / My Progress
     document.getElementById('btn-my-mistakes').onclick = () => this.openMistakes();
     document.getElementById('btn-my-progress').onclick = () => this.openProgress();
+    document.getElementById('btn-leaderboard').onclick = () => this.openLeaderboard();
     document.getElementById('btn-review-done').onclick = () => UI.showPage('pg-mistakes');
+  },
+
+  async openLeaderboard() {
+    UI.showPage('pg-leaderboard');
+    const wrap = document.getElementById('leaderboard-list');
+    wrap.innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
+    const list = await DB.getLeaderboard(20);
+    if (list.length === 0) {
+      wrap.innerHTML = '<p style="text-align:center;color:#8a7d6f;padding:30px;">No learners yet.</p>';
+      return;
+    }
+    wrap.innerHTML = '';
+    list.forEach((s, i) => {
+      const rank = i + 1;
+      const rankClass = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
+      const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+      const isMe = s.id === this.state.user.id;
+      const row = document.createElement('div');
+      row.className = 'lb-row' + (isMe ? ' lb-me' : '');
+      row.innerHTML = `
+        <div class="lb-rank ${rankClass}">${medal}</div>
+        <div class="lb-avatar">${s.avatar || '👤'}</div>
+        <div class="lb-name">${UI.escapeHtml(s.name)}${isMe ? ' (you)' : ''}</div>
+        <div class="lb-credits">💎 ${s.credits}</div>
+      `;
+      wrap.appendChild(row);
+    });
   },
 
   async refreshHome() {
@@ -493,6 +553,17 @@ const Student = {
       badge.style.display = 'inline-flex';
     } else {
       badge.style.display = 'none';
+    }
+
+    // Streak
+    const streak = await DB.getStreak(this.state.user.id);
+    const banner = document.getElementById('streak-banner');
+    if (streak >= 1) {
+      const txt = I18N.t('streak.text').replace('{n}', streak);
+      document.getElementById('streak-text').textContent = txt;
+      banner.style.display = 'flex';
+    } else {
+      banner.style.display = 'none';
     }
   },
 

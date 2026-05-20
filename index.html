@@ -321,6 +321,11 @@
       <h2 class="page-title"><span data-i18n="student.home.title">Hi</span>, <em id="sh-name-em">friend</em>!</h2>
       <p class="page-sub" data-i18n="student.home.sub">How would you like to learn today?</p>
 
+      <div id="streak-banner" class="streak-banner" style="display:none;">
+        <span class="streak-flame">🔥</span>
+        <span id="streak-text">—</span>
+      </div>
+
       <div class="entry-modes">
         <button class="entry-card entry-recommended" data-mode="recommended">
           <div class="entry-icon">✨</div>
@@ -354,6 +359,10 @@
         <button class="my-tool-btn" id="btn-my-progress">
           <span class="my-tool-icon">📈</span>
           <span class="my-tool-label" data-i18n="tool.progress">My Progress</span>
+        </button>
+        <button class="my-tool-btn" id="btn-leaderboard">
+          <span class="my-tool-icon">🏆</span>
+          <span class="my-tool-label" data-i18n="tool.leaderboard">Leaderboard</span>
         </button>
       </div>
     </div>
@@ -473,6 +482,11 @@
         <div class="stat-box"><div class="stat-num">+<span id="stat-earned">0</span></div><div class="stat-label" data-i18n="complete.earned">Earned</div></div>
         <div class="stat-box"><div class="stat-num">💎 <span id="stat-total">0</span></div><div class="stat-label" data-i18n="complete.total">Total</div></div>
       </div>
+
+      <div id="report-box" class="report-box" style="display:none;">
+        <h3 class="report-title">📊 <span data-i18n="report.title">Learning Report</span></h3>
+        <div id="report-content"></div>
+      </div>
       <div class="complete-actions">
         <button id="btn-learn-more" class="btn-primary" data-i18n="complete.learn_more">Learn another topic</button>
         <button id="btn-back-home" class="btn-secondary" data-i18n="complete.home">Back home</button>
@@ -522,6 +536,16 @@
     </div>
   </section>
 
+  <!-- 排行榜页 -->
+  <section id="pg-leaderboard" class="page">
+    <button class="page-back" data-back="pg-student-home">←</button>
+    <div class="container">
+      <h2 class="page-title">🏆 <em data-i18n="leaderboard.title.em">Leaderboard</em></h2>
+      <p class="page-sub" data-i18n="leaderboard.sub">Top learners by credits earned</p>
+      <div id="leaderboard-list" class="leaderboard-list"></div>
+    </div>
+  </section>
+
   <!-- ============ 老师后台 ============ -->
   <section id="pg-teacher" class="page">
     <div class="container admin-container">
@@ -568,6 +592,16 @@
 
       <div class="class-actions">
         <button id="btn-add-existing-student" class="btn-secondary"><span data-i18n="class.add_student">+ Add existing student</span></button>
+      </div>
+
+      <div class="stats-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:20px;">
+        <div class="stat-box"><div class="stat-num" id="class-active-today">0</div><div class="stat-label" data-i18n="class.active_today">Active today</div></div>
+        <div class="stat-box"><div class="stat-num" id="class-total-sessions">0</div><div class="stat-label" data-i18n="class.total_sessions">Total sessions</div></div>
+      </div>
+
+      <div class="heatmap-section">
+        <h3 class="subject-section-title" data-i18n="class.weak_topics">Topics the class struggles with</h3>
+        <div id="class-heatmap"></div>
       </div>
 
       <h3 class="subject-section-title" data-i18n="class.students">Students in this class</h3>

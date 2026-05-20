@@ -392,7 +392,32 @@ const I18N = {
     'progress.accuracy': { en: 'Accuracy', cn: '正确率', es: 'Precisión', ko: '정확도', vi: 'Chính xác' },
     'progress.mastered': { en: 'Mastered', cn: '已掌握', es: 'Dominados', ko: '마스터', vi: 'Làm chủ' },
     'progress.badges': { en: 'Badges', cn: '成就徽章', es: 'Insignias', ko: '배지', vi: 'Huy hiệu' },
-    'progress.credits_history': { en: 'Credits history', cn: '积分记录', es: 'Historial de créditos', ko: '크레딧 기록', vi: 'Lịch sử tín chỉ' }
+    'progress.credits_history': { en: 'Credits history', cn: '积分记录', es: 'Historial de créditos', ko: '크레딧 기록', vi: 'Lịch sử tín chỉ' },
+
+    'tool.leaderboard': { en: 'Leaderboard', cn: '排行榜', es: 'Clasificación', ko: '순위표', vi: 'Bảng xếp hạng' },
+    'leaderboard.title.em': { en: 'Leaderboard', cn: '排行榜', es: 'Clasificación', ko: '순위표', vi: 'Xếp hạng' },
+    'leaderboard.sub': {
+      en: 'Top learners by credits earned',
+      cn: '积分最高的学习者',
+      es: 'Mejores estudiantes por créditos',
+      ko: '크레딧 기준 상위 학습자',
+      vi: 'Người học hàng đầu theo tín chỉ'
+    },
+    'streak.text': {
+      en: '{n}-day learning streak!',
+      cn: '连续学习 {n} 天!',
+      es: '¡Racha de {n} días!',
+      ko: '{n}일 연속 학습!',
+      vi: 'Chuỗi {n} ngày học!'
+    },
+    'report.title': { en: 'Learning Report', cn: '学习报告', es: 'Informe', ko: '학습 보고서', vi: 'Báo cáo học tập' },
+    'report.summary': { en: 'Overall', cn: '总评', es: 'General', ko: '종합', vi: 'Tổng quan' },
+    'report.strengths': { en: 'Strengths', cn: '强项', es: 'Fortalezas', ko: '강점', vi: 'Điểm mạnh' },
+    'report.focus': { en: 'Focus on', cn: '需加强', es: 'Enfoque', ko: '집중', vi: 'Cần tập trung' },
+    'report.suggestion': { en: 'Suggestion', cn: '建议', es: 'Sugerencia', ko: '제안', vi: 'Gợi ý' },
+    'class.active_today': { en: 'Active today', cn: '今日活跃', es: 'Activos hoy', ko: '오늘 활동', vi: 'Hoạt động hôm nay' },
+    'class.total_sessions': { en: 'Total sessions', cn: '总学习次数', es: 'Sesiones totales', ko: '총 세션', vi: 'Tổng phiên' },
+    'class.weak_topics': { en: 'Topics the class struggles with', cn: '全班的薄弱主题', es: 'Temas difíciles', ko: '학급 취약 주제', vi: 'Chủ đề lớp còn yếu' }
   },
 
   init() {

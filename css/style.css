@@ -1506,3 +1506,140 @@ body::before {
   .badge-icon { font-size: 24px; }
   .badge-name { font-size: 9px; }
 }
+
+/* ============ AI Learning Report ============ */
+.report-box {
+  background: var(--bg-paper);
+  border: 1.5px solid var(--accent-ochre);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 24px;
+  text-align: left;
+  animation: pageIn 0.4s ease;
+}
+.report-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 14px;
+  text-align: center;
+}
+.report-stars {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 14px;
+  letter-spacing: 2px;
+}
+.report-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--line);
+}
+.report-row:last-child { border-bottom: none; }
+.report-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-rust);
+}
+.report-text {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+.report-suggestion {
+  background: rgba(201, 136, 60, 0.08);
+  margin: 8px -12px 0;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border-bottom: none;
+}
+
+/* ============ Streak banner ============ */
+.streak-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(0deg, var(--bg-paper), var(--bg-paper));
+  border: 1.5px solid var(--accent-rust);
+  border-radius: 999px;
+  padding: 8px 18px;
+  margin: 0 auto 20px;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-rust);
+}
+.streak-flame { font-size: 18px; }
+
+/* ============ Leaderboard ============ */
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+.lb-row {
+  display: grid;
+  grid-template-columns: 36px 36px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+}
+.lb-row.lb-me {
+  border-color: var(--accent-rust);
+  background: rgba(176, 69, 37, 0.05);
+}
+.lb-rank {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink-mute);
+  text-align: center;
+}
+.lb-rank.gold { color: #d4a017; }
+.lb-rank.silver { color: #9ca3af; }
+.lb-rank.bronze { color: #cd7f32; }
+.lb-avatar { font-size: 24px; text-align: center; }
+.lb-name { font-weight: 600; font-size: 15px; color: var(--ink); }
+.lb-credits {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--accent-ochre);
+  font-size: 15px;
+}
+
+/* ============ Teacher heatmap ============ */
+.heatmap-section { margin-top: 20px; }
+.heatmap-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.heatmap-topic { font-size: 14px; color: var(--ink); }
+.heatmap-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.heatmap-bar {
+  width: 100px;
+  height: 8px;
+  background: var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.heatmap-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+.heatmap-pct { font-size: 12px; font-weight: 600; min-width: 36px; text-align: right; }

@@ -470,5 +470,112 @@ Object.assign(DB, {
       .order('created_at', { ascending: false })
       .limit(limit);
     return data || [];
+  },
+
+  async saveReport(sessionId, report, understandingLevel) {
+    await supabase.from('lc_sessions').update({
+      ai_report: report,
+      understanding_level: understandingLevel || null
+    }).eq('id', sessionId);
+  }
+});
+
+// ============================================
+// Leaderboard / Streak / Teacher analytics
+// ============================================
+
+Object.assign(DB, {
+  async getLeaderboard(limit = 20) {
+    const { data } = await supabase.from('lc_students')
+      .select('id, name, avatar, credits')
+      .eq('active', true)
+      .order('credits', { ascending: false })
+      .limit(limit);
+    return data || [];
+  },
+
+  async getClassLeaderboard(classId) {
+    const students = await this.getClassStudents(classId);
+    return students.sort((a, b) => b.credits - a.credits);
+  },
+
+  // Streak: count consecutive days with at least one session
+  async getStreak(studentId) {
+    const { data } = await supabase.from('lc_sessions')
+      .select('started_at')
+      .eq('student_id', studentId)
+      .order('started_at', { ascending: false })
+      .limit(60);
+    if (!data || data.length === 0) return 0;
+
+    const days = new Set();
+    data.forEach(s => {
+      const d = new Date(s.started_at);
+      days.add(`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`);
+    });
+
+    let streak = 0;
+    const now = new Date();
+    for (let i = 0; i < 60; i++) {
+      const check = new Date(now);
+      check.setDate(now.getDate() - i);
+      const key = `${check.getFullYear()}-${check.getMonth()}-${check.getDate()}`;
+      if (days.has(key)) {
+        streak++;
+      } else if (i === 0) {
+        continue; // today might not have a session yet, don't break
+      } else {
+        break;
+      }
+    }
+    return streak;
+  },
+
+  // Teacher: which topics is the class struggling with
+  async getClassWeakTopics(classId) {
+    const students = await this.getClassStudents(classId);
+    const studentIds = students.map(s => s.id);
+    if (studentIds.length === 0) return [];
+
+    const { data: sessions } = await supabase.from('lc_sessions')
+      .select('topic, quiz_score, quiz_total')
+      .in('student_id', studentIds)
+      .eq('status', 'completed');
+
+    const byTopic = {};
+    (sessions || []).forEach(s => {
+      if (!byTopic[s.topic]) byTopic[s.topic] = { correct: 0, total: 0, count: 0 };
+      byTopic[s.topic].correct += s.quiz_score || 0;
+      byTopic[s.topic].total += s.quiz_total || 0;
+      byTopic[s.topic].count++;
+    });
+
+    return Object.entries(byTopic).map(([topic, d]) => ({
+      topic,
+      accuracy: d.total > 0 ? Math.round(d.correct / d.total * 100) : 0,
+      attempts: d.count
+    })).sort((a, b) => a.accuracy - b.accuracy);
+  },
+
+  async getClassActivity(classId) {
+    const students = await this.getClassStudents(classId);
+    const studentIds = students.map(s => s.id);
+    if (studentIds.length === 0) return { activeToday: 0, totalSessions: 0 };
+
+    const { data: sessions } = await supabase.from('lc_sessions')
+      .select('student_id, started_at')
+      .in('student_id', studentIds);
+
+    const today = new Date();
+    const todayKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+    const activeStudents = new Set();
+    (sessions || []).forEach(s => {
+      const d = new Date(s.started_at);
+      if (`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}` === todayKey) {
+        activeStudents.add(s.student_id);
+      }
+    });
+
+    return { activeToday: activeStudents.size, totalSessions: (sessions || []).length };
   }
 });
