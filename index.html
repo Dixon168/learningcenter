@@ -344,6 +344,18 @@
         <h3 class="subject-section-title" data-i18n="student.choose_subject">Choose a subject</h3>
         <div id="subject-grid" class="subject-grid"></div>
       </div>
+
+      <div class="my-tools">
+        <button class="my-tool-btn" id="btn-my-mistakes">
+          <span class="my-tool-icon">📕</span>
+          <span class="my-tool-label" data-i18n="tool.mistakes">My Mistakes</span>
+          <span class="my-tool-badge" id="mistakes-badge" style="display:none;">0</span>
+        </button>
+        <button class="my-tool-btn" id="btn-my-progress">
+          <span class="my-tool-icon">📈</span>
+          <span class="my-tool-label" data-i18n="tool.progress">My Progress</span>
+        </button>
+      </div>
     </div>
   </section>
 
@@ -465,6 +477,48 @@
         <button id="btn-learn-more" class="btn-primary" data-i18n="complete.learn_more">Learn another topic</button>
         <button id="btn-back-home" class="btn-secondary" data-i18n="complete.home">Back home</button>
       </div>
+    </div>
+  </section>
+
+  <!-- 错题本页 -->
+  <section id="pg-mistakes" class="page">
+    <button class="page-back" data-back="pg-student-home">←</button>
+    <div class="container">
+      <h2 class="page-title">📕 <em data-i18n="mistakes.title.em">Mistakes</em></h2>
+      <p class="page-sub" data-i18n="mistakes.sub">Review and master what you got wrong</p>
+      <div id="mistakes-list" class="admin-list"></div>
+    </div>
+  </section>
+
+  <!-- 错题复习(单题)页 -->
+  <section id="pg-review-mistake" class="page">
+    <button class="page-back" data-back="pg-mistakes">←</button>
+    <div class="container">
+      <div class="quiz-question-num">📕 <span data-i18n="review.retry">Try again</span></div>
+      <h2 id="review-q" class="quiz-question">—</h2>
+      <div id="review-options" class="quiz-options"></div>
+      <div id="review-feedback" class="quiz-feedback"></div>
+      <button id="btn-review-done" class="btn-primary" style="display:none;" data-i18n="review.next">Done →</button>
+    </div>
+  </section>
+
+  <!-- 我的历程页 -->
+  <section id="pg-progress" class="page">
+    <button class="page-back" data-back="pg-student-home">←</button>
+    <div class="container">
+      <h2 class="page-title">📈 <em data-i18n="progress.title.em">Progress</em></h2>
+
+      <div class="stats-grid sd-stats">
+        <div class="stat-box"><div class="stat-num" id="pg-stat-topics">0</div><div class="stat-label" data-i18n="progress.topics">Topics</div></div>
+        <div class="stat-box"><div class="stat-num" id="pg-stat-accuracy">0%</div><div class="stat-label" data-i18n="progress.accuracy">Accuracy</div></div>
+        <div class="stat-box"><div class="stat-num" id="pg-stat-mastered">0</div><div class="stat-label" data-i18n="progress.mastered">Mastered</div></div>
+      </div>
+
+      <h3 class="subject-section-title" data-i18n="progress.badges">Badges</h3>
+      <div id="badges-grid" class="badges-grid"></div>
+
+      <h3 class="subject-section-title" data-i18n="progress.credits_history">Credits history</h3>
+      <div id="credits-history" class="admin-list"></div>
     </div>
   </section>
 

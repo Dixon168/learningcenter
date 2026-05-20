@@ -21,6 +21,7 @@ const Student = {
     this.updateCreditsDisplay(user.credits);
     UI.showPage('pg-student-home');
     await this.loadSubjects();
+    await this.refreshHome();
   },
 
   updateCreditsDisplay(c) {
@@ -469,7 +470,165 @@ const Student = {
 
     document.getElementById('btn-quiz-next').onclick = () => this.nextQuestion();
 
-    document.getElementById('btn-learn-more').onclick = () => UI.showPage('pg-student-home');
-    document.getElementById('btn-back-home').onclick = () => UI.showPage('pg-student-home');
+    document.getElementById('btn-learn-more').onclick = () => { Student.refreshHome(); UI.showPage('pg-student-home'); };
+    document.getElementById('btn-back-home').onclick = () => { Student.refreshHome(); UI.showPage('pg-student-home'); };
+
+    // My Mistakes / My Progress
+    document.getElementById('btn-my-mistakes').onclick = () => this.openMistakes();
+    document.getElementById('btn-my-progress').onclick = () => this.openProgress();
+    document.getElementById('btn-review-done').onclick = () => UI.showPage('pg-mistakes');
+  },
+
+  async refreshHome() {
+    // refresh credits + mistakes badge
+    const fresh = await DB.getStudent(this.state.user.id);
+    if (fresh) {
+      this.state.user = fresh;
+      this.updateCreditsDisplay(fresh.credits);
+    }
+    const open = await DB.getOpenMistakes(this.state.user.id);
+    const badge = document.getElementById('mistakes-badge');
+    if (open.length > 0) {
+      badge.textContent = open.length;
+      badge.style.display = 'inline-flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  },
+
+  // ============ Mistakes ============
+  async openMistakes() {
+    UI.showPage('pg-mistakes');
+    const wrap = document.getElementById('mistakes-list');
+    wrap.innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
+    const mistakes = await DB.getOpenMistakes(this.state.user.id);
+    if (mistakes.length === 0) {
+      wrap.innerHTML = '<p style="text-align:center;color:#8a7d6f;padding:30px;">No mistakes to review — you\'re all caught up! 🎉</p>';
+      return;
+    }
+    wrap.innerHTML = '';
+    mistakes.forEach(m => {
+      const row = document.createElement('div');
+      row.className = 'admin-row';
+      row.innerHTML = `
+        <div class="admin-row-avatar">${m.lc_subjects?.icon || '📕'}</div>
+        <div class="admin-row-info">
+          <div class="admin-row-name">${UI.escapeHtml(m.topic || 'Review')}</div>
+          <div class="admin-row-meta">
+            <span>${UI.escapeHtml((m.question_text || '').slice(0, 40))}...</span>
+            ${m.retry_count ? `<span>tried ${m.retry_count}×</span>` : ''}
+          </div>
+        </div>
+        <div class="admin-row-credits" style="background:var(--accent-forest);color:var(--bg-cream);">retry →</div>
+      `;
+      row.onclick = () => this.reviewMistake(m);
+      wrap.appendChild(row);
+    });
+  },
+
+  reviewMistake(mistake) {
+    this.state.reviewingMistake = mistake;
+    document.getElementById('review-q').textContent = mistake.question_text;
+    const optEl = document.getElementById('review-options');
+    optEl.innerHTML = '';
+
+    // Build options: correct + wrong, shuffled
+    const opts = [mistake.correct_answer, mistake.wrong_answer].filter(Boolean);
+    // pad with generic distractors if needed
+    const shuffled = opts.sort(() => Math.random() - 0.5);
+    this.state.reviewCorrect = shuffled.indexOf(mistake.correct_answer);
+
+    shuffled.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-option';
+      btn.textContent = `${'AB'[i]}. ${opt}`;
+      btn.onclick = () => this.answerReview(i);
+      optEl.appendChild(btn);
+    });
+    document.getElementById('review-feedback').className = 'quiz-feedback';
+    document.getElementById('review-feedback').innerHTML = '';
+    document.getElementById('btn-review-done').style.display = 'none';
+    UI.showPage('pg-review-mistake');
+  },
+
+  async answerReview(choice) {
+    const m = this.state.reviewingMistake;
+    const correct = choice === this.state.reviewCorrect;
+    const buttons = document.querySelectorAll('#review-options .quiz-option');
+    buttons.forEach((b, i) => {
+      b.classList.add('disabled');
+      b.onclick = null;
+      if (i === this.state.reviewCorrect) b.classList.add('correct');
+      else if (i === choice) b.classList.add('wrong');
+    });
+    const fb = document.getElementById('review-feedback');
+    fb.className = 'quiz-feedback show ' + (correct ? 'correct' : 'wrong');
+
+    if (correct) {
+      const count = await DB.incrementMistakeRetry(m.id, true);
+      fb.innerHTML = '✅ Mastered! ' + UI.escapeHtml(m.ai_analysis || '') + '<br><br>💎 +5 credits';
+      const nc = await DB.changeCredits(this.state.user.id, 5, 'Mastered a mistake');
+      this.state.user.credits = nc;
+      this.updateCreditsDisplay(nc);
+    } else {
+      await DB.incrementMistakeRetry(m.id, false);
+      fb.innerHTML = '❌ Not yet. ' + UI.escapeHtml(m.ai_analysis || '') + '<br><br>Keep trying — you\'ll get it!';
+    }
+    document.getElementById('btn-review-done').style.display = 'block';
+  },
+
+  // ============ Progress ============
+  async openProgress() {
+    UI.showPage('pg-progress');
+    const stats = await DB.getStudentStats(this.state.user.id);
+    const mastered = await DB.getMasteredCount(this.state.user.id);
+    document.getElementById('pg-stat-topics').textContent = stats.completedSessions;
+    document.getElementById('pg-stat-accuracy').textContent = stats.accuracy + '%';
+    document.getElementById('pg-stat-mastered').textContent = mastered;
+
+    // Badges
+    const badges = this.computeBadges(stats, mastered, this.state.user.credits);
+    const bg = document.getElementById('badges-grid');
+    bg.innerHTML = '';
+    badges.forEach(b => {
+      const el = document.createElement('div');
+      el.className = 'badge-item' + (b.earned ? ' earned' : '');
+      el.innerHTML = `<div class="badge-icon">${b.icon}</div><div class="badge-name">${b.name}</div>`;
+      bg.appendChild(el);
+    });
+
+    // Credits history
+    const hist = await DB.getCreditsHistory(this.state.user.id);
+    const wrap = document.getElementById('credits-history');
+    if (hist.length === 0) {
+      wrap.innerHTML = '<p style="text-align:center;color:#8a7d6f;padding:20px;">No activity yet.</p>';
+    } else {
+      wrap.innerHTML = '';
+      hist.forEach(h => {
+        const row = document.createElement('div');
+        row.className = 'credit-row';
+        const sign = h.amount >= 0 ? '+' : '';
+        const color = h.amount >= 0 ? 'var(--accent-forest)' : 'var(--accent-rust)';
+        row.innerHTML = `
+          <span class="credit-reason">${UI.escapeHtml(h.reason)}</span>
+          <span class="credit-date">${new Date(h.created_at).toLocaleDateString()}</span>
+          <span class="credit-amount" style="color:${color};">${sign}${h.amount}</span>
+        `;
+        wrap.appendChild(row);
+      });
+    }
+  },
+
+  computeBadges(stats, mastered, credits) {
+    return [
+      { icon: '🌱', name: 'First Topic', earned: stats.completedSessions >= 1 },
+      { icon: '🔥', name: '5 Topics', earned: stats.completedSessions >= 5 },
+      { icon: '🏆', name: '10 Topics', earned: stats.completedSessions >= 10 },
+      { icon: '🎯', name: '80% Accuracy', earned: stats.accuracy >= 80 && stats.totalQuestions >= 5 },
+      { icon: '💯', name: 'Perfect Score', earned: stats.accuracy === 100 && stats.totalQuestions >= 5 },
+      { icon: '📕', name: 'Fixed a Mistake', earned: mastered >= 1 },
+      { icon: '🦉', name: 'Mistake Master', earned: mastered >= 5 },
+      { icon: '💎', name: '500 Credits', earned: credits >= 500 }
+    ];
   }
 };

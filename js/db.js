@@ -420,3 +420,55 @@ Object.assign(DB, {
     return data;
   }
 });
+
+// ============================================
+// Mistake review + student progress
+// ============================================
+
+Object.assign(DB, {
+  async getOpenMistakes(studentId) {
+    const { data } = await supabase.from('lc_mistakes')
+      .select('*, lc_subjects(name_en, name_cn, icon)')
+      .eq('student_id', studentId)
+      .neq('status', 'mastered')
+      .order('created_at', { ascending: false });
+    return data || [];
+  },
+
+  async markMistakeReviewing(mistakeId) {
+    await supabase.from('lc_mistakes').update({
+      status: 'reviewing',
+      retry_count: undefined
+    }).eq('id', mistakeId);
+  },
+
+  async incrementMistakeRetry(mistakeId, mastered) {
+    const { data } = await supabase.from('lc_mistakes').select('retry_count').eq('id', mistakeId).single();
+    const newCount = (data?.retry_count || 0) + 1;
+    const updates = { retry_count: newCount };
+    if (mastered) {
+      updates.status = 'mastered';
+      updates.mastered_at = new Date().toISOString();
+    } else {
+      updates.status = 'reviewing';
+    }
+    await supabase.from('lc_mistakes').update(updates).eq('id', mistakeId);
+    return newCount;
+  },
+
+  async getMasteredCount(studentId) {
+    const { count } = await supabase.from('lc_mistakes')
+      .select('*', { count: 'exact', head: true })
+      .eq('student_id', studentId).eq('status', 'mastered');
+    return count || 0;
+  },
+
+  async getCreditsHistory(studentId, limit = 30) {
+    const { data } = await supabase.from('lc_credits_log')
+      .select('*')
+      .eq('student_id', studentId)
+      .order('created_at', { ascending: false })
+      .limit(limit);
+    return data || [];
+  }
+});

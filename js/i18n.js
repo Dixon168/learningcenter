@@ -373,7 +373,26 @@ const I18N = {
       ko: '자녀의 로그인 코드를 입력하세요',
       vi: 'Nhập mã đăng nhập của con bạn'
     },
-    'form.link': { en: 'Link', cn: '绑定', es: 'Vincular', ko: '연결', vi: 'Liên kết' }
+    'form.link': { en: 'Link', cn: '绑定', es: 'Vincular', ko: '연결', vi: 'Liên kết' },
+
+    'tool.mistakes': { en: 'My Mistakes', cn: '错题本', es: 'Mis errores', ko: '오답 노트', vi: 'Lỗi của tôi' },
+    'tool.progress': { en: 'My Progress', cn: '我的历程', es: 'Mi progreso', ko: '내 진행', vi: 'Tiến độ' },
+    'mistakes.title.em': { en: 'Mistakes', cn: '错题本', es: 'Errores', ko: '오답', vi: 'Lỗi sai' },
+    'mistakes.sub': {
+      en: 'Review and master what you got wrong',
+      cn: '复习并掌握做错的题',
+      es: 'Repasa y domina lo que fallaste',
+      ko: '틀린 문제를 복습하고 마스터하세요',
+      vi: 'Ôn lại và làm chủ những gì bạn đã sai'
+    },
+    'review.retry': { en: 'Try again', cn: '再试一次', es: 'Intenta de nuevo', ko: '다시 시도', vi: 'Thử lại' },
+    'review.next': { en: 'Done →', cn: '完成 →', es: 'Listo →', ko: '완료 →', vi: 'Xong →' },
+    'progress.title.em': { en: 'Progress', cn: '我的历程', es: 'Progreso', ko: '진행', vi: 'Tiến độ' },
+    'progress.topics': { en: 'Topics', cn: '主题', es: 'Temas', ko: '주제', vi: 'Chủ đề' },
+    'progress.accuracy': { en: 'Accuracy', cn: '正确率', es: 'Precisión', ko: '정확도', vi: 'Chính xác' },
+    'progress.mastered': { en: 'Mastered', cn: '已掌握', es: 'Dominados', ko: '마스터', vi: 'Làm chủ' },
+    'progress.badges': { en: 'Badges', cn: '成就徽章', es: 'Insignias', ko: '배지', vi: 'Huy hiệu' },
+    'progress.credits_history': { en: 'Credits history', cn: '积分记录', es: 'Historial de créditos', ko: '크레딧 기록', vi: 'Lịch sử tín chỉ' }
   },
 
   init() {

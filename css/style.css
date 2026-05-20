@@ -1399,3 +1399,110 @@ body::before {
   font-size: 10px;
   color: var(--ink-mute);
 }
+
+/* ============ My Tools (mistakes / progress) ============ */
+.my-tools {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 24px;
+}
+.my-tool-btn {
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+  position: relative;
+}
+.my-tool-btn:hover {
+  border-color: var(--accent-ochre);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+.my-tool-icon { font-size: 24px; }
+.my-tool-label {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+}
+.my-tool-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--accent-rust);
+  color: var(--bg-cream);
+  min-width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+}
+
+/* Badges */
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.badge-item {
+  text-align: center;
+  padding: 14px 6px;
+  border-radius: var(--radius-md);
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  opacity: 0.4;
+  filter: grayscale(1);
+  transition: all 0.2s;
+}
+.badge-item.earned {
+  opacity: 1;
+  filter: none;
+  border-color: var(--accent-ochre);
+  box-shadow: var(--shadow-soft);
+}
+.badge-icon { font-size: 30px; margin-bottom: 4px; }
+.badge-name {
+  font-size: 10px;
+  color: var(--ink-soft);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* Credits history */
+.credit-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  background: var(--bg-paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 6px;
+}
+.credit-reason { font-size: 14px; color: var(--ink); }
+.credit-date { font-size: 12px; color: var(--ink-mute); }
+.credit-amount {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  min-width: 44px;
+  text-align: right;
+}
+
+@media (max-width: 480px) {
+  .badges-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .badge-icon { font-size: 24px; }
+  .badge-name { font-size: 9px; }
+}
