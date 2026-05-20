@@ -34,7 +34,7 @@ const AI = {
     }
   },
 
-  buildSystemPrompt(subject, ageGroup, language, topic) {
+  buildSystemPrompt(subject, ageGroup, language, topic, memory) {
     const langName = this.LANG_NAMES[language] || 'English';
     const ageHelp = this.AGE_GUIDANCE[ageGroup] || '';
     const subjectName = {
@@ -45,29 +45,52 @@ const AI = {
       science: 'Science'
     }[subject] || subject;
 
-    return `You are a patient, curious tutor teaching ${subjectName}.
+    let memoryNote = '';
+    if (memory) {
+      const parts = [];
+      if (memory.studentName) parts.push(`The student's name is ${memory.studentName}.`);
+      if (memory.level) parts.push(`They are level ${memory.level}.`);
+      if (memory.recentTopics && memory.recentTopics.length) {
+        parts.push(`Recently they learned: ${memory.recentTopics.join(', ')}.`);
+      }
+      if (memory.strengths && memory.strengths.length) {
+        parts.push(`They did well on: ${memory.strengths.join(', ')}.`);
+      }
+      if (memory.struggles && memory.struggles.length) {
+        parts.push(`They struggled with: ${memory.struggles.join(', ')}.`);
+      }
+      if (parts.length) {
+        memoryNote = `\n\nWHAT YOU REMEMBER ABOUT THIS STUDENT:\n${parts.join(' ')}\nUse this naturally — greet them by name, reference past topics ("last time you did great with X!"), and connect new ideas to what they already know. Don't list everything; weave it in like a tutor who genuinely remembers them.`;
+      }
+    }
 
-CRITICAL LANGUAGE RULE: Reply ONLY in ${langName}. All your text, examples, and questions must be in ${langName}. Do not switch languages even if the student writes in another language.
+    return `You are Spark ⚡, a warm and curious AI learning companion teaching ${subjectName}. You are not a cold tool — you're like an enthusiastic big brother/sister who loves this subject and genuinely cares about the student. You celebrate their wins, encourage them when stuck, and make learning feel like an adventure.
+
+YOUR PERSONALITY:
+- Warm, upbeat, curious. You get excited about cool ideas.
+- You use the student's name when you know it.
+- You encourage often: "Great thinking!", "You're so close!", "I love that question!"
+- You never make the student feel dumb. Mistakes are "let's figure it out together" moments.
+
+CRITICAL LANGUAGE RULE: Reply ONLY in ${langName}. All text, examples, and questions in ${langName}. Never switch even if the student writes another language.
 
 YOUR TEACHING STYLE (Socratic / guided):
 - Don't just give answers. Lead the student to discover them.
 - Explain a small piece, then ask a question to check understanding.
-- When student asks something, first ask: "What do you think?" or "Why do you think that happens?"
-- After they try, build on their answer.
+- When the student asks something, first invite their thinking: "What do you think?"
 - Use 3-4 short paragraphs per reply (not a wall of text).
 - Use **bold** for key terms.
 
 AGE LEVEL: ${ageHelp}
 
-VISUAL AIDS — Include SVG diagrams when they help understanding. To include a visual, end your message with a tag like this (one tag per message max):
+VISUAL AIDS — Include SVG diagrams when they help. End your message with ONE tag like:
 [SVG:gear teeth1=12 teeth2=6]
 [SVG:lever loadPos=30 effortPos=120]
 [SVG:pulley]
 [SVG:spring stretch=20]
 [SVG:inclined_plane]
 [SVG:wheel_axle]
-
-Only use SVG tags listed above. Place them at the very END of your message. The student will see an animated diagram.
+Only these templates. Place at the very END of your message.${memoryNote}
 
 CURRENT TOPIC: ${topic}
 
@@ -116,33 +139,33 @@ Pick concrete, visual, hands-on topics. Names must be in ${langName} and short (
     }
   },
 
-  async startTeaching(subject, ageGroup, language, topic, fromFreeQuestion = false) {
-    const system = this.buildSystemPrompt(subject, ageGroup, language, topic);
+  async startTeaching(subject, ageGroup, language, topic, fromFreeQuestion = false, memory = null) {
+    const system = this.buildSystemPrompt(subject, ageGroup, language, topic, memory);
     const opener = fromFreeQuestion
-      ? `The student just asked: "${topic}". Begin teaching them about this. Welcome them warmly, then introduce the first key idea, and end with a question to engage them.`
-      : `Begin the lesson on "${topic}". Open with a hook that captures interest at this age, introduce ONE first concept clearly, then ask a question to engage the student.`;
+      ? `The student just asked: "${topic}". Begin teaching them about this. Greet them warmly (by name if you know it), then introduce the first key idea, and end with a question to engage them.`
+      : `Begin the lesson on "${topic}". Greet the student warmly (by name if you know it, and reference past learning if relevant), open with a hook that captures interest at this age, introduce ONE first concept clearly, then ask a question.`;
     return await this.call([{ role: 'user', content: opener }], system);
   },
 
-  async continueTeaching(subject, ageGroup, language, topic, history) {
-    const system = this.buildSystemPrompt(subject, ageGroup, language, topic);
+  async continueTeaching(subject, ageGroup, language, topic, history, memory = null) {
+    const system = this.buildSystemPrompt(subject, ageGroup, language, topic, memory);
     return await this.call(history, system);
   },
 
-  async actionRephrase(subject, ageGroup, language, topic, history) {
-    const system = this.buildSystemPrompt(subject, ageGroup, language, topic);
+  async actionRephrase(subject, ageGroup, language, topic, history, memory = null) {
+    const system = this.buildSystemPrompt(subject, ageGroup, language, topic, memory);
     const messages = [...history, { role: 'user', content: "I don't quite get it. Can you explain it a different way, simpler?" }];
     return await this.call(messages, system);
   },
 
-  async actionExample(subject, ageGroup, language, topic, history) {
-    const system = this.buildSystemPrompt(subject, ageGroup, language, topic);
+  async actionExample(subject, ageGroup, language, topic, history, memory = null) {
+    const system = this.buildSystemPrompt(subject, ageGroup, language, topic, memory);
     const messages = [...history, { role: 'user', content: "Can you give me a concrete real-life example?" }];
     return await this.call(messages, system);
   },
 
-  async actionDraw(subject, ageGroup, language, topic, history) {
-    const system = this.buildSystemPrompt(subject, ageGroup, language, topic);
+  async actionDraw(subject, ageGroup, language, topic, history, memory = null) {
+    const system = this.buildSystemPrompt(subject, ageGroup, language, topic, memory);
     const messages = [...history, { role: 'user', content: "Can you draw a picture to help me see it? Use an SVG tag." }];
     return await this.call(messages, system);
   },

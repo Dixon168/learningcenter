@@ -417,7 +417,21 @@ const I18N = {
     'report.suggestion': { en: 'Suggestion', cn: '建议', es: 'Sugerencia', ko: '제안', vi: 'Gợi ý' },
     'class.active_today': { en: 'Active today', cn: '今日活跃', es: 'Activos hoy', ko: '오늘 활동', vi: 'Hoạt động hôm nay' },
     'class.total_sessions': { en: 'Total sessions', cn: '总学习次数', es: 'Sesiones totales', ko: '총 세션', vi: 'Tổng phiên' },
-    'class.weak_topics': { en: 'Topics the class struggles with', cn: '全班的薄弱主题', es: 'Temas difíciles', ko: '학급 취약 주제', vi: 'Chủ đề lớp còn yếu' }
+    'class.weak_topics': { en: 'Topics the class struggles with', cn: '全班的薄弱主题', es: 'Temas difíciles', ko: '학급 취약 주제', vi: 'Chủ đề lớp còn yếu' },
+
+    'game.level': { en: 'Lv', cn: '等级', es: 'Nv', ko: '레벨', vi: 'Cấp' },
+    'game.chest': { en: 'Open your daily chest!', cn: '打开每日宝箱!', es: '¡Abre tu cofre diario!', ko: '일일 보물상자 열기!', vi: 'Mở rương hằng ngày!' },
+    'tool.shop': { en: 'Avatar Shop', cn: '头像商店', es: 'Tienda', ko: '아바타 상점', vi: 'Cửa hàng' },
+    'shop.title.em': { en: 'Avatar Shop', cn: '头像商店', es: 'Tienda', ko: '아바타 상점', vi: 'Cửa hàng Avatar' },
+    'shop.sub': {
+      en: 'Spend credits to unlock new avatars',
+      cn: '用积分解锁新头像',
+      es: 'Gasta créditos para desbloquear avatares',
+      ko: '크레딧으로 새 아바타 잠금 해제',
+      vi: 'Dùng tín chỉ mở khóa avatar mới'
+    },
+    'shop.using': { en: 'Using', cn: '使用中', es: 'En uso', ko: '사용중', vi: 'Đang dùng' },
+    'shop.use': { en: 'Use', cn: '使用', es: 'Usar', ko: '사용', vi: 'Dùng' }
   },
 
   init() {

@@ -184,12 +184,15 @@ const Student = {
     UI.showPage('pg-chat');
 
     this.setTyping(true);
+    const memory = await DB.buildStudentMemory(this.state.user);
+    this.state.memory = memory;
     const { content, error } = await AI.startTeaching(
       this.state.subject.slug,
       this.state.ageGroup,
       this.state.user.preferred_language || I18N.current,
       topic,
-      this.state.entryMode === 'free_question'
+      this.state.entryMode === 'free_question',
+      memory
     );
     this.setTyping(false);
 
@@ -223,7 +226,8 @@ const Student = {
       this.state.ageGroup,
       this.state.user.preferred_language || I18N.current,
       this.state.topic,
-      this.state.chatHistory
+      this.state.chatHistory,
+      this.state.memory
     );
     this.setTyping(false);
 
@@ -244,11 +248,11 @@ const Student = {
     this.setTyping(true);
     let result;
     if (kind === 'rephrase') {
-      result = await AI.actionRephrase(this.state.subject.slug, this.state.ageGroup, this.state.user.preferred_language || I18N.current, this.state.topic, this.state.chatHistory);
+      result = await AI.actionRephrase(this.state.subject.slug, this.state.ageGroup, this.state.user.preferred_language || I18N.current, this.state.topic, this.state.chatHistory, this.state.memory);
     } else if (kind === 'example') {
-      result = await AI.actionExample(this.state.subject.slug, this.state.ageGroup, this.state.user.preferred_language || I18N.current, this.state.topic, this.state.chatHistory);
+      result = await AI.actionExample(this.state.subject.slug, this.state.ageGroup, this.state.user.preferred_language || I18N.current, this.state.topic, this.state.chatHistory, this.state.memory);
     } else if (kind === 'draw') {
-      result = await AI.actionDraw(this.state.subject.slug, this.state.ageGroup, this.state.user.preferred_language || I18N.current, this.state.topic, this.state.chatHistory);
+      result = await AI.actionDraw(this.state.subject.slug, this.state.ageGroup, this.state.user.preferred_language || I18N.current, this.state.topic, this.state.chatHistory, this.state.memory);
     }
     this.setTyping(false);
     if (!result || result.error) { UI.toast('AI error', 'error'); return; }
@@ -397,6 +401,7 @@ const Student = {
       const nc = await DB.changeCredits(this.state.user.id, CONFIG.CREDITS.PER_CORRECT, 'Quiz correct', this.state.sessionId);
       this.state.user.credits = nc;
       this.updateCreditsDisplay(nc);
+      await DB.addXp(this.state.user.id, 20, 'Correct answer');
     }
 
     const next = document.getElementById('btn-quiz-next');
@@ -423,6 +428,15 @@ const Student = {
     if (this.state.sessionId) {
       await DB.completeSession(this.state.sessionId, this.state.quizScore, this.state.quizQuestions.length, earned);
     }
+
+    // Award completion XP + check level up
+    const xpResult = await DB.addXp(this.state.user.id, 50, 'Topic completed');
+    this.state.user.xp = xpResult.newXp;
+    this.state.user.level = xpResult.level;
+    if (xpResult.leveledUp) {
+      setTimeout(() => UI.toast(`⚡ LEVEL UP! You're now level ${xpResult.level}!`, 'success', 4000), 1200);
+    }
+
     document.getElementById('stat-score').textContent = `${this.state.quizScore}/${this.state.quizQuestions.length}`;
     document.getElementById('stat-earned').textContent = earned;
     document.getElementById('stat-total').textContent = nc;
@@ -509,6 +523,8 @@ const Student = {
     document.getElementById('btn-my-mistakes').onclick = () => this.openMistakes();
     document.getElementById('btn-my-progress').onclick = () => this.openProgress();
     document.getElementById('btn-leaderboard').onclick = () => this.openLeaderboard();
+    document.getElementById('btn-avatar-shop').onclick = () => this.openShop();
+    document.getElementById('chest-btn').onclick = () => this.claimChest();
     document.getElementById('btn-review-done').onclick = () => UI.showPage('pg-mistakes');
   },
 
@@ -565,6 +581,86 @@ const Student = {
     } else {
       banner.style.display = 'none';
     }
+
+    // Level bar
+    const lv = Game.levelFromXp(this.state.user.xp || 0);
+    document.getElementById('sh-level').textContent = lv.level;
+    document.getElementById('sh-xp-in').textContent = lv.inLevel;
+    document.getElementById('sh-xp-need').textContent = lv.needed;
+    document.getElementById('sh-level-fill').style.width = lv.pct + '%';
+
+    // Daily chest
+    const chestBtn = document.getElementById('chest-btn');
+    if (Game.canClaimChest(this.state.user.last_chest_at)) {
+      chestBtn.style.display = 'flex';
+    } else {
+      chestBtn.style.display = 'none';
+    }
+  },
+
+  async claimChest() {
+    const r = await DB.claimChest(this.state.user.id);
+    if (r.error === 'already_claimed') {
+      UI.toast('Already claimed today — come back tomorrow!', '', 2500);
+      document.getElementById('chest-btn').style.display = 'none';
+      return;
+    }
+    this.state.user.credits = r.newCredits;
+    this.state.user.last_chest_at = new Date().toISOString();
+    this.state.user.chest_streak = r.newStreak;
+    this.updateCreditsDisplay(r.newCredits);
+    document.getElementById('chest-btn').style.display = 'none';
+    UI.toast(`🎁 Day ${r.newStreak}! +${r.reward} credits 💎`, 'success', 3500);
+  },
+
+  // ============ Avatar Shop ============
+  async openShop() {
+    UI.showPage('pg-shop');
+    const fresh = await DB.getStudent(this.state.user.id);
+    this.state.user = fresh;
+    document.getElementById('shop-credits').textContent = fresh.credits;
+    const owned = fresh.unlocked_avatars || [];
+    const grid = document.getElementById('shop-grid');
+    grid.innerHTML = '';
+    Game.AVATAR_SHOP.forEach(item => {
+      const isOwned = owned.includes(item.emoji);
+      const isCurrent = fresh.avatar === item.emoji;
+      const cell = document.createElement('div');
+      cell.className = 'shop-item' + (isCurrent ? ' current' : '') + (isOwned ? ' owned' : '');
+      cell.innerHTML = `
+        <div class="shop-emoji">${item.emoji}</div>
+        ${isCurrent ? `<div class="shop-tag">✓ ${I18N.t('shop.using')}</div>`
+          : isOwned ? `<div class="shop-tag owned-tag">${I18N.t('shop.use')}</div>`
+          : `<div class="shop-tag cost-tag">💎 ${item.cost}</div>`}
+      `;
+      cell.onclick = () => this.shopClick(item, isOwned, isCurrent);
+      grid.appendChild(cell);
+    });
+  },
+
+  async shopClick(item, isOwned, isCurrent) {
+    if (isCurrent) return;
+    if (isOwned) {
+      // equip it
+      await DB.setStudentAvatar(this.state.user.id, item.emoji);
+      this.state.user.avatar = item.emoji;
+      document.getElementById('sh-avatar').textContent = item.emoji;
+      UI.toast(`${item.emoji} equipped!`, 'success', 1500);
+      this.openShop();
+      return;
+    }
+    // unlock it
+    const r = await DB.unlockAvatar(this.state.user.id, item.emoji, item.cost);
+    if (r.error === 'not_enough') {
+      UI.toast('Not enough credits — keep learning!', 'error', 2500);
+      return;
+    }
+    if (r.error) { UI.toast('Error', 'error'); return; }
+    this.state.user.credits = r.newCredits;
+    this.state.user.unlocked_avatars = r.newAvatars;
+    this.updateCreditsDisplay(r.newCredits);
+    UI.toast(`🎉 Unlocked ${item.emoji}!`, 'success', 2000);
+    this.openShop();
   },
 
   // ============ Mistakes ============

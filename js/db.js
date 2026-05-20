@@ -579,3 +579,83 @@ Object.assign(DB, {
     return { activeToday: activeStudents.size, totalSessions: (sessions || []).length };
   }
 });
+
+// ============================================
+// Gamification: XP, levels, chest, avatar shop
+// ============================================
+
+Object.assign(DB, {
+  async addXp(studentId, amount, reason) {
+    await supabase.from('lc_xp_log').insert({ student_id: studentId, amount, reason });
+    const student = await this.getStudent(studentId);
+    const newXp = (student.xp || 0) + amount;
+    const { level } = Game.levelFromXp(newXp);
+    const leveledUp = level > (student.level || 1);
+    await supabase.from('lc_students').update({ xp: newXp, level }).eq('id', studentId);
+    return { newXp, level, leveledUp };
+  },
+
+  async claimChest(studentId) {
+    const student = await this.getStudent(studentId);
+    if (!Game.canClaimChest(student.last_chest_at)) {
+      return { error: 'already_claimed' };
+    }
+    const continues = Game.chestStreakContinues(student.last_chest_at);
+    const newStreak = continues ? (student.chest_streak || 0) + 1 : 1;
+    const reward = Game.chestReward(newStreak);
+    const newCredits = (student.credits || 0) + reward;
+    await supabase.from('lc_students').update({
+      credits: newCredits,
+      last_chest_at: new Date().toISOString(),
+      chest_streak: newStreak
+    }).eq('id', studentId);
+    await supabase.from('lc_credits_log').insert({
+      student_id: studentId, amount: reward, reason: `Daily chest (day ${newStreak})`
+    });
+    return { reward, newStreak, newCredits };
+  },
+
+  async unlockAvatar(studentId, emoji, cost) {
+    const student = await this.getStudent(studentId);
+    if ((student.unlocked_avatars || []).includes(emoji)) {
+      return { error: 'already_owned' };
+    }
+    if ((student.credits || 0) < cost) {
+      return { error: 'not_enough' };
+    }
+    const newCredits = student.credits - cost;
+    const newAvatars = [...(student.unlocked_avatars || []), emoji];
+    await supabase.from('lc_students').update({
+      credits: newCredits,
+      unlocked_avatars: newAvatars
+    }).eq('id', studentId);
+    await supabase.from('lc_credits_log').insert({
+      student_id: studentId, amount: -cost, reason: `Unlocked avatar ${emoji}`
+    });
+    return { newCredits, newAvatars };
+  },
+
+  async setStudentAvatar(studentId, emoji) {
+    await supabase.from('lc_students').update({ avatar: emoji }).eq('id', studentId);
+  },
+
+  async setDifficulty(studentId, difficulty) {
+    await supabase.from('lc_students').update({ difficulty }).eq('id', studentId);
+  },
+
+  // Build a memory object for Spark to use
+  async buildStudentMemory(student) {
+    const sessions = await this.getStudentSessions(student.id, 10);
+    const completed = sessions.filter(s => s.status === 'completed');
+    const recentTopics = completed.slice(0, 4).map(s => s.topic);
+    const strengths = completed.filter(s => s.quiz_total > 0 && s.quiz_score / s.quiz_total >= 0.8).slice(0, 3).map(s => s.topic);
+    const struggles = completed.filter(s => s.quiz_total > 0 && s.quiz_score / s.quiz_total < 0.5).slice(0, 3).map(s => s.topic);
+    return {
+      studentName: student.name,
+      level: student.level || 1,
+      recentTopics,
+      strengths,
+      struggles
+    };
+  }
+});

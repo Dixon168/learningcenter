@@ -318,6 +318,19 @@
         </div>
       </header>
 
+      <div class="level-bar-wrap">
+        <div class="level-info">
+          <span class="level-badge">⚡ <span data-i18n="game.level">Lv</span> <span id="sh-level">1</span></span>
+          <span class="level-xp"><span id="sh-xp-in">0</span>/<span id="sh-xp-need">100</span> XP</span>
+        </div>
+        <div class="level-track"><div class="level-fill" id="sh-level-fill" style="width:0%;"></div></div>
+      </div>
+
+      <button id="chest-btn" class="chest-btn" style="display:none;">
+        <span class="chest-icon">🎁</span>
+        <span class="chest-text" data-i18n="game.chest">Open your daily chest!</span>
+      </button>
+
       <h2 class="page-title"><span data-i18n="student.home.title">Hi</span>, <em id="sh-name-em">friend</em>!</h2>
       <p class="page-sub" data-i18n="student.home.sub">How would you like to learn today?</p>
 
@@ -363,6 +376,10 @@
         <button class="my-tool-btn" id="btn-leaderboard">
           <span class="my-tool-icon">🏆</span>
           <span class="my-tool-label" data-i18n="tool.leaderboard">Leaderboard</span>
+        </button>
+        <button class="my-tool-btn" id="btn-avatar-shop">
+          <span class="my-tool-icon">🛍️</span>
+          <span class="my-tool-label" data-i18n="tool.shop">Avatar Shop</span>
         </button>
       </div>
     </div>
@@ -543,6 +560,17 @@
       <h2 class="page-title">🏆 <em data-i18n="leaderboard.title.em">Leaderboard</em></h2>
       <p class="page-sub" data-i18n="leaderboard.sub">Top learners by credits earned</p>
       <div id="leaderboard-list" class="leaderboard-list"></div>
+    </div>
+  </section>
+
+  <!-- 头像商店页 -->
+  <section id="pg-shop" class="page">
+    <button class="page-back" data-back="pg-student-home">←</button>
+    <div class="container">
+      <h2 class="page-title">🛍️ <em data-i18n="shop.title.em">Avatar Shop</em></h2>
+      <p class="page-sub" data-i18n="shop.sub">Spend credits to unlock new avatars</p>
+      <div class="shop-balance">💎 <span id="shop-credits">0</span></div>
+      <div id="shop-grid" class="shop-grid"></div>
     </div>
   </section>
 
@@ -751,6 +779,7 @@
   <script src="js/ui.js"></script>
   <script src="js/svg-templates.js"></script>
   <script src="js/ai.js"></script>
+  <script src="js/game.js"></script>
   <script src="js/admin.js"></script>
   <script src="js/teacher.js"></script>
   <script src="js/parent.js"></script>
