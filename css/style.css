@@ -1757,3 +1757,98 @@ body::before {
   .shop-grid { grid-template-columns: repeat(3, 1fr); }
   .shop-emoji { font-size: 30px; }
 }
+
+/* ============ Curriculum map (student) ============ */
+.cur-unit {
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.cur-unit-recommended {
+  border-color: var(--accent-ochre);
+}
+.cur-unit-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.cur-unit-icon { font-size: 22px; }
+.cur-unit-title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  flex: 1;
+}
+.cur-unit-badge {
+  background: var(--accent-ochre);
+  color: var(--bg-cream);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+.cur-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cur-topic-chip {
+  background: var(--bg-cream);
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cur-topic-chip:hover {
+  border-color: var(--accent-rust);
+  background: var(--bg-paper);
+  transform: translateY(-1px);
+}
+.cur-topic-emoji { font-size: 14px; }
+
+/* ============ Curriculum admin ============ */
+.curriculum-stats-bar {
+  display: flex;
+  gap: 18px;
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+.cur-admin-unit {
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 14px;
+}
+.cur-admin-unit-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.cur-admin-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cur-admin-chip {
+  background: var(--bg-cream);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: var(--ink-soft);
+}

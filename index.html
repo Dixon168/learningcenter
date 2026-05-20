@@ -148,6 +148,7 @@
         <button class="admin-tab active" data-tab="students">👨‍🎓 <span data-i18n="admin.tab.students">Students</span></button>
         <button class="admin-tab" data-tab="teachers">👨‍🏫 <span data-i18n="admin.tab.teachers">Teachers</span></button>
         <button class="admin-tab" data-tab="parents">👨‍👩‍👧 <span data-i18n="admin.tab.parents">Parents</span></button>
+        <button class="admin-tab" data-tab="curriculum">📚 <span data-i18n="admin.tab.curriculum">Curriculum</span></button>
         <button class="admin-tab" data-tab="stats">📊 <span data-i18n="admin.tab.stats">Stats</span></button>
       </div>
 
@@ -163,6 +164,15 @@
 
       <div id="admin-tab-parents" class="admin-tab-content">
         <div id="admin-parents-list" class="admin-list"></div>
+      </div>
+
+      <div id="admin-tab-curriculum" class="admin-tab-content">
+        <div class="curriculum-stats-bar">
+          <span>📚 <span id="cur-stat-topics">0</span> <span data-i18n="cur.topics_count">topics</span></span>
+          <span>✅ <span id="cur-stat-lessons">0</span> <span data-i18n="cur.lessons_cached">lessons cached</span></span>
+        </div>
+        <button id="btn-add-topic" class="btn-primary"><span data-i18n="cur.add_topic">+ Add Topic</span></button>
+        <div id="admin-curriculum-list" class="admin-list"></div>
       </div>
 
       <div id="admin-tab-stats" class="admin-tab-content">
@@ -397,6 +407,21 @@
         <button class="age-card" data-age="11-14"><div class="age-emoji">🔧</div><div class="age-range">11–14</div><div class="age-desc" data-i18n="age.11-14">Concepts & experiments</div></button>
         <button class="age-card" data-age="15-18"><div class="age-emoji">📐</div><div class="age-range">15–18</div><div class="age-desc" data-i18n="age.15-18">Formulas & applications</div></button>
         <button class="age-card" data-age="adult"><div class="age-emoji">🎓</div><div class="age-range" data-i18n="age.adult">Adult</div><div class="age-desc" data-i18n="age.adult.desc">In-depth technical</div></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 课程地图页 -->
+  <section id="pg-curriculum" class="page">
+    <button class="page-back" data-back="pg-age-select">←</button>
+    <div class="container">
+      <h2 class="page-title"><em data-i18n="curriculum.title.em">Course</em> <span data-i18n="curriculum.title">Map</span></h2>
+      <p class="page-sub" data-i18n="curriculum.sub">Follow the path, or jump to any topic</p>
+      <div id="curriculum-loading" class="loading-state"><div class="spinner"></div></div>
+      <div id="curriculum-units"></div>
+      <div class="custom-topic-wrap" style="margin-top:20px;">
+        <input type="text" id="cur-custom-topic" class="big-input" data-i18n-placeholder="topic.custom_placeholder" placeholder="Or type what you want to learn..."/>
+        <button id="btn-cur-custom" class="btn-primary" data-i18n="topic.start">Start</button>
       </div>
     </div>
   </section>

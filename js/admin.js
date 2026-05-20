@@ -13,7 +13,51 @@ const Admin = {
     if (name === 'students') this.loadStudents();
     else if (name === 'teachers') this.loadTeachers();
     else if (name === 'parents') this.loadParents();
+    else if (name === 'curriculum') this.loadCurriculum();
     else if (name === 'stats') this.loadStats();
+  },
+
+  async loadCurriculum() {
+    const wrap = document.getElementById('admin-curriculum-list');
+    wrap.innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
+    const subjects = await DB.getEnabledSubjects();
+    const mech = subjects[0];
+    if (!mech) { wrap.innerHTML = '<p style="padding:20px;color:#8a7d6f;">No subject enabled.</p>'; return; }
+    this._curSubject = mech;
+
+    const stats = await DB.getLessonStats(mech.id);
+    document.getElementById('cur-stat-topics').textContent = stats.topics;
+    document.getElementById('cur-stat-lessons').textContent = stats.lessons;
+
+    const units = await DB.getUnits(mech.id);
+    if (units.length === 0) {
+      wrap.innerHTML = '<p style="padding:20px;color:#8a7d6f;text-align:center;">No curriculum yet. Run the seed SQL to load the mechanical engineering framework.</p>';
+      return;
+    }
+    wrap.innerHTML = '';
+    for (const unit of units) {
+      const topics = await DB.getTopics(unit.id);
+      const block = document.createElement('div');
+      block.className = 'cur-admin-unit';
+      block.innerHTML = `
+        <div class="cur-admin-unit-title">${unit.icon || '📦'} ${UI.escapeHtml(unit.title_en)} <span style="color:#8a7d6f;font-weight:400;">(${topics.length})</span></div>
+        <div class="cur-admin-topics">${topics.map(t => `<span class="cur-admin-chip">${t.emoji || '⚙️'} ${UI.escapeHtml(t.title_en)}</span>`).join('')}</div>
+      `;
+      wrap.appendChild(block);
+    }
+  },
+
+  async addTopic() {
+    const title = prompt('New topic name (English):');
+    if (!title || !title.trim()) return;
+    const mech = this._curSubject;
+    const id = await DB.autoAddTopic(mech.id, title.trim(), 'en');
+    if (id) {
+      UI.toast('✅ Topic added', 'success');
+      this.loadCurriculum();
+    } else {
+      UI.toast('Could not add topic', 'error');
+    }
   },
 
   async loadStudents() {
@@ -303,5 +347,8 @@ const Admin = {
     document.getElementById('btn-new-teacher').onclick = () => this.openNewTeacher();
     document.getElementById('btn-cancel-new-teacher').onclick = () => UI.hideModal('modal-new-teacher');
     document.getElementById('btn-create-teacher').onclick = () => this.createTeacher();
+
+    const addTopicBtn = document.getElementById('btn-add-topic');
+    if (addTopicBtn) addTopicBtn.onclick = () => this.addTopic();
   }
 };

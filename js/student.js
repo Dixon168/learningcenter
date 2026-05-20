@@ -118,8 +118,54 @@ const Student = {
 
   selectAge(age) {
     this.state.ageGroup = age;
-    UI.showPage('pg-topic-select');
-    this.loadRecommendedTopics();
+    UI.showPage('pg-curriculum');
+    this.loadCurriculum();
+  },
+
+  async loadCurriculum() {
+    const loading = document.getElementById('curriculum-loading');
+    const wrap = document.getElementById('curriculum-units');
+    loading.style.display = 'block';
+    wrap.innerHTML = '';
+
+    const units = await DB.getUnits(this.state.subject.id);
+    loading.style.display = 'none';
+
+    if (!units || units.length === 0) {
+      wrap.innerHTML = '<p style="text-align:center;color:#8a7d6f;padding:20px;">No course map yet. Type a topic below to start learning!</p>';
+      return;
+    }
+
+    const age = this.state.ageGroup;
+    for (const unit of units) {
+      const topics = await DB.getTopics(unit.id);
+      if (topics.length === 0) continue;
+
+      // Is this unit suited to the student's age? (highlight, don't hide)
+      const ageMatch = !unit.age_groups || unit.age_groups.length === 0 || unit.age_groups.includes(age);
+
+      const unitEl = document.createElement('div');
+      unitEl.className = 'cur-unit' + (ageMatch ? ' cur-unit-recommended' : '');
+      const unitTitle = I18N.current === 'cn' && unit.title_cn ? unit.title_cn : unit.title_en;
+      unitEl.innerHTML = `
+        <div class="cur-unit-header">
+          <span class="cur-unit-icon">${unit.icon || '📦'}</span>
+          <span class="cur-unit-title">${UI.escapeHtml(unitTitle)}</span>
+          ${ageMatch ? `<span class="cur-unit-badge">${I18N.t('curriculum.for_you')}</span>` : ''}
+        </div>
+        <div class="cur-topics"></div>
+      `;
+      const topicsWrap = unitEl.querySelector('.cur-topics');
+      topics.forEach(t => {
+        const tTitle = I18N.current === 'cn' && t.title_cn ? t.title_cn : t.title_en;
+        const chip = document.createElement('button');
+        chip.className = 'cur-topic-chip';
+        chip.innerHTML = `<span class="cur-topic-emoji">${t.emoji || '⚙️'}</span> ${UI.escapeHtml(tTitle)}`;
+        chip.onclick = () => this.startLearning(tTitle, 'recommended');
+        topicsWrap.appendChild(chip);
+      });
+      wrap.appendChild(unitEl);
+    }
   },
 
   async loadRecommendedTopics() {
@@ -168,12 +214,14 @@ const Student = {
     this.state.chatHistory = [];
     if (mode) this.state.entryMode = mode;
 
+    const lang = this.state.user.preferred_language || I18N.current;
+
     const session = await DB.startSession({
       studentId: this.state.user.id,
       subjectId: this.state.subject.id,
       topic,
       ageGroup: this.state.ageGroup,
-      language: this.state.user.preferred_language || I18N.current,
+      language: lang,
       entryMode: this.state.entryMode || 'recommended'
     });
     if (session) this.state.sessionId = session.id;
@@ -186,14 +234,43 @@ const Student = {
     this.setTyping(true);
     const memory = await DB.buildStudentMemory(this.state.user);
     this.state.memory = memory;
-    const { content, error } = await AI.startTeaching(
-      this.state.subject.slug,
-      this.state.ageGroup,
-      this.state.user.preferred_language || I18N.current,
-      topic,
-      this.state.entryMode === 'free_question',
-      memory
-    );
+
+    // 1) Try cache first
+    let content, error;
+    const cached = await DB.getCachedLesson(topic, this.state.ageGroup, lang);
+    if (cached && cached.intro) {
+      content = cached.intro;
+      DB.incrementLessonCount(topic, this.state.ageGroup, lang);
+    } else {
+      // 2) Not cached -> generate with AI, then store permanently
+      const result = await AI.startTeaching(
+        this.state.subject.slug,
+        this.state.ageGroup,
+        lang,
+        topic,
+        this.state.entryMode === 'free_question',
+        memory
+      );
+      content = result.content;
+      error = result.error;
+
+      if (!error && content) {
+        // Auto-add topic to library if it's a student-asked one not in framework
+        let topicId = null;
+        if (this.state.entryMode === 'free_question') {
+          topicId = await DB.autoAddTopic(this.state.subject.id, topic, lang);
+        }
+        // Cache the generated lesson (strip SVG tag for clean storage of intro)
+        await DB.saveCachedLesson({
+          subjectId: this.state.subject.id,
+          topicId,
+          topicTitle: topic,
+          ageGroup: this.state.ageGroup,
+          language: lang,
+          intro: content
+        });
+      }
+    }
     this.setTyping(false);
 
     if (error) { this.appendMessage('ai', error); return; }
@@ -483,6 +560,16 @@ const Student = {
 
     document.querySelectorAll('.age-card').forEach(c => {
       c.onclick = () => this.selectAge(c.dataset.age);
+    });
+
+    document.getElementById('btn-cur-custom').onclick = () => {
+      const t = document.getElementById('cur-custom-topic').value.trim();
+      if (!t) { UI.toast('Please enter a topic', 'error'); return; }
+      this.state.entryMode = 'free_question';
+      this.startLearning(t, 'free_question');
+    };
+    document.getElementById('cur-custom-topic').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('btn-cur-custom').click();
     });
 
     document.getElementById('btn-custom-topic').onclick = () => {

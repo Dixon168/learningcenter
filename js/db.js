@@ -659,3 +659,104 @@ Object.assign(DB, {
     };
   }
 });
+
+// ============================================
+// Curriculum: units, topics, lesson cache
+// ============================================
+
+Object.assign(DB, {
+  async getUnits(subjectId) {
+    const { data } = await supabase.from('lc_units')
+      .select('*').eq('subject_id', subjectId).order('sort_order');
+    return data || [];
+  },
+
+  async getTopics(unitId) {
+    const { data } = await supabase.from('lc_topics')
+      .select('*').eq('unit_id', unitId).order('sort_order');
+    return data || [];
+  },
+
+  async getAllTopicsForSubject(subjectId) {
+    const { data } = await supabase.from('lc_topics')
+      .select('*').eq('subject_id', subjectId).order('sort_order');
+    return data || [];
+  },
+
+  // Lesson cache: look up by topic title + age + language
+  async getCachedLesson(topicTitle, ageGroup, language) {
+    const { data } = await supabase.from('lc_lessons')
+      .select('*')
+      .eq('topic_title', topicTitle)
+      .eq('age_group', ageGroup)
+      .eq('language', language)
+      .maybeSingle();
+    return data;
+  },
+
+  async saveCachedLesson({ subjectId, topicId, topicTitle, ageGroup, language, intro }) {
+    const { data, error } = await supabase.from('lc_lessons').upsert({
+      subject_id: subjectId,
+      topic_id: topicId || null,
+      topic_title: topicTitle,
+      age_group: ageGroup,
+      language,
+      intro,
+      status: 'ready'
+    }, { onConflict: 'topic_title,age_group,language' }).select().maybeSingle();
+    if (error) console.error('saveCachedLesson:', error);
+    return data;
+  },
+
+  async incrementLessonCount(topicTitle, ageGroup, language) {
+    const lesson = await this.getCachedLesson(topicTitle, ageGroup, language);
+    if (lesson) {
+      await supabase.from('lc_lessons')
+        .update({ generated_count: (lesson.generated_count || 1) + 1 })
+        .eq('id', lesson.id);
+    }
+  },
+
+  // Auto-add a student-asked topic to the library (if not already there)
+  async autoAddTopic(subjectId, title, language) {
+    // Check if a topic with this title already exists for the subject
+    const { data: existing } = await supabase.from('lc_topics')
+      .select('id').eq('subject_id', subjectId).ilike('title_en', title).maybeSingle();
+    if (existing) return existing.id;
+
+    // Find or create a "Student Questions" catch-all unit
+    let { data: unit } = await supabase.from('lc_units')
+      .select('id').eq('subject_id', subjectId).eq('title_en', 'Student Questions').maybeSingle();
+    if (!unit) {
+      const { data: newUnit } = await supabase.from('lc_units').insert({
+        subject_id: subjectId,
+        title_en: 'Student Questions',
+        title_cn: '学生提问',
+        icon: '💭',
+        age_groups: ['3-6','7-10','11-14','15-18','adult'],
+        sort_order: 99
+      }).select().single();
+      unit = newUnit;
+    }
+
+    const { data: newTopic } = await supabase.from('lc_topics').insert({
+      unit_id: unit.id,
+      subject_id: subjectId,
+      title_en: title,
+      title_cn: title,
+      emoji: '💡',
+      sort_order: 999,
+      source: 'student_added'
+    }).select().single();
+    return newTopic?.id;
+  },
+
+  // Admin: batch pre-generate count
+  async getLessonStats(subjectId) {
+    const { count: total } = await supabase.from('lc_topics')
+      .select('*', { count: 'exact', head: true }).eq('subject_id', subjectId);
+    const { count: cached } = await supabase.from('lc_lessons')
+      .select('*', { count: 'exact', head: true }).eq('subject_id', subjectId);
+    return { topics: total || 0, lessons: cached || 0 };
+  }
+});

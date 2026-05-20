@@ -431,7 +431,22 @@ const I18N = {
       vi: 'Dùng tín chỉ mở khóa avatar mới'
     },
     'shop.using': { en: 'Using', cn: '使用中', es: 'En uso', ko: '사용중', vi: 'Đang dùng' },
-    'shop.use': { en: 'Use', cn: '使用', es: 'Usar', ko: '사용', vi: 'Dùng' }
+    'shop.use': { en: 'Use', cn: '使用', es: 'Usar', ko: '사용', vi: 'Dùng' },
+
+    'curriculum.title': { en: 'Map', cn: '地图', es: 'Mapa', ko: '맵', vi: 'Bản đồ' },
+    'curriculum.title.em': { en: 'Course', cn: '课程', es: 'Curso', ko: '코스', vi: 'Khóa học' },
+    'curriculum.sub': {
+      en: 'Follow the path, or jump to any topic',
+      cn: '跟着路线学, 或跳到任何主题',
+      es: 'Sigue el camino o salta a cualquier tema',
+      ko: '경로를 따르거나 원하는 주제로 이동하세요',
+      vi: 'Theo lộ trình hoặc chọn bất kỳ chủ đề nào'
+    },
+    'curriculum.for_you': { en: 'For you', cn: '适合你', es: 'Para ti', ko: '추천', vi: 'Cho bạn' },
+    'admin.tab.curriculum': { en: 'Curriculum', cn: '课程', es: 'Currículo', ko: '커리큘럼', vi: 'Chương trình' },
+    'cur.topics_count': { en: 'topics', cn: '主题', es: 'temas', ko: '주제', vi: 'chủ đề' },
+    'cur.lessons_cached': { en: 'lessons cached', cn: '已缓存课程', es: 'lecciones', ko: '저장된 수업', vi: 'bài đã lưu' },
+    'cur.add_topic': { en: '+ Add Topic', cn: '+ 添加主题', es: '+ Añadir tema', ko: '+ 주제 추가', vi: '+ Thêm chủ đề' }
   },
 
   init() {
