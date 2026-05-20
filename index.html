@@ -443,12 +443,21 @@
     <div class="container">
       <h2 class="page-title"><em data-i18n="curriculum.title.em">Course</em> <span data-i18n="curriculum.title">Map</span></h2>
       <p class="page-sub" data-i18n="curriculum.sub">Follow the path, or jump to any topic</p>
+
+      <div class="ask-spotlight" id="ask-spotlight">
+        <div class="ask-spotlight-head">
+          <span class="ask-spotlight-icon">💭</span>
+          <span class="ask-spotlight-title" data-i18n="ask_spot.title">Curious about something? Just ask!</span>
+        </div>
+        <div class="ask-spotlight-input-row">
+          <input type="text" id="cur-custom-topic" class="ask-spotlight-input" data-i18n-placeholder="ask_spot.placeholder" placeholder="e.g. How does a rocket fly?"/>
+          <button id="btn-cur-custom" class="ask-spotlight-btn" data-i18n="ask_spot.go">Ask Spark</button>
+        </div>
+        <div class="ask-spotlight-chips" id="ask-spotlight-chips"></div>
+      </div>
+
       <div id="curriculum-loading" class="loading-state"><div class="spinner"></div></div>
       <div id="curriculum-units"></div>
-      <div class="custom-topic-wrap" style="margin-top:20px;">
-        <input type="text" id="cur-custom-topic" class="big-input" data-i18n-placeholder="topic.custom_placeholder" placeholder="Or type what you want to learn..."/>
-        <button id="btn-cur-custom" class="btn-primary" data-i18n="topic.start">Start</button>
-      </div>
     </div>
   </section>
 

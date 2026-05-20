@@ -1903,3 +1903,90 @@ body::before {
   width: 0%;
   transition: width 0.3s ease;
 }
+
+/* ============ Ask Spotlight (encourage curiosity) ============ */
+.ask-spotlight {
+  background: linear-gradient(135deg, rgba(201,136,60,0.10), rgba(176,69,37,0.08));
+  border: 2px solid var(--accent-ochre);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  margin-bottom: 24px;
+}
+.ask-spotlight-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.ask-spotlight-icon { font-size: 24px; }
+.ask-spotlight-title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.ask-spotlight-input-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.ask-spotlight-input {
+  flex: 1;
+  padding: 12px 14px;
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--ink);
+  min-width: 0;
+}
+.ask-spotlight-input:focus {
+  outline: none;
+  border-color: var(--accent-rust);
+  box-shadow: 0 0 0 3px rgba(176,69,37,0.1);
+}
+.ask-spotlight-btn {
+  flex-shrink: 0;
+  background: var(--accent-rust);
+  color: var(--bg-cream);
+  border: none;
+  padding: 0 18px;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.ask-spotlight-btn:hover {
+  background: var(--ink);
+  transform: translateY(-1px);
+}
+.ask-spotlight-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.ask-chip {
+  background: var(--bg-paper);
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 13px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.ask-chip:hover {
+  border-color: var(--accent-rust);
+  color: var(--accent-rust);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 480px) {
+  .ask-spotlight-title { font-size: 15px; }
+  .ask-spotlight-btn { padding: 0 14px; font-size: 13px; }
+}

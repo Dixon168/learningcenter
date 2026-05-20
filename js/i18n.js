@@ -456,7 +456,23 @@ const I18N = {
       vi: 'AI điền thư viện cho mọi chủ đề và độ tuổi.'
     },
     'cur.batch_btn': { en: 'Generate batch', cn: '生成一批', es: 'Generar lote', ko: '일괄 생성', vi: 'Tạo loạt' },
-    'cur.batch_cancel': { en: 'Cancel', cn: '取消', es: 'Cancelar', ko: '취소', vi: 'Hủy' }
+    'cur.batch_cancel': { en: 'Cancel', cn: '取消', es: 'Cancelar', ko: '취소', vi: 'Hủy' },
+
+    'ask_spot.title': {
+      en: 'Curious about something? Just ask!',
+      cn: '好奇什么? 直接问我!',
+      es: '¿Tienes curiosidad? ¡Solo pregunta!',
+      ko: '궁금한 게 있나요? 물어보세요!',
+      vi: 'Tò mò điều gì? Cứ hỏi nhé!'
+    },
+    'ask_spot.placeholder': {
+      en: 'e.g. How does a rocket fly?',
+      cn: '例如:火箭怎么飞起来?',
+      es: 'ej. ¿Cómo vuela un cohete?',
+      ko: '예: 로켓은 어떻게 날까요?',
+      vi: 'VD: Tên lửa bay thế nào?'
+    },
+    'ask_spot.go': { en: 'Ask Spark', cn: '问 Spark', es: 'Pregunta', ko: 'Spark에게', vi: 'Hỏi Spark' }
   },
 
   init() {

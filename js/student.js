@@ -134,11 +134,40 @@ const Student = {
     this.loadCurriculum();
   },
 
+  renderAskChips() {
+    const examplesByAge = {
+      '3-6':   ['🚂 How do trains move?', '🎈 Why do balloons float?', '🛞 Why are wheels round?'],
+      '7-10':  ['🚀 How does a rocket fly?', '🚲 How do bike brakes work?', '⏰ How does a clock tick?'],
+      '11-14': ['🚁 How does a helicopter fly?', '🌉 How do bridges hold weight?', '⚙️ How do gears work?'],
+      '15-18': ['🏎️ How does a car engine work?', '🤖 How do robot arms move?', '✈️ How do jet engines work?'],
+      'adult': ['🔧 How does hydraulics work?', '🏗️ How do cranes lift so much?', '🛰️ How do satellites stay up?']
+    };
+    const chips = examplesByAge[this.state.ageGroup] || examplesByAge['11-14'];
+    const wrap = document.getElementById('ask-spotlight-chips');
+    if (!wrap) return;
+    wrap.innerHTML = '';
+    chips.forEach(c => {
+      const btn = document.createElement('button');
+      btn.className = 'ask-chip';
+      btn.textContent = c;
+      btn.onclick = () => {
+        // strip leading emoji for the actual topic
+        const topic = c.replace(/^[^\w]+/, '').trim();
+        this.state.entryMode = 'free_question';
+        this.startLearning(topic, 'free_question');
+      };
+      wrap.appendChild(btn);
+    });
+  },
+
   async loadCurriculum() {
     const loading = document.getElementById('curriculum-loading');
     const wrap = document.getElementById('curriculum-units');
     loading.style.display = 'block';
     wrap.innerHTML = '';
+
+    // Curiosity example chips by age — encourage free questions
+    this.renderAskChips();
 
     const units = await DB.getUnits(this.state.subject.id);
     loading.style.display = 'none';
