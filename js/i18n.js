@@ -472,7 +472,16 @@ const I18N = {
       ko: '예: 로켓은 어떻게 날까요?',
       vi: 'VD: Tên lửa bay thế nào?'
     },
-    'ask_spot.go': { en: 'Ask Spark', cn: '问 Spark', es: 'Pregunta', ko: 'Spark에게', vi: 'Hỏi Spark' }
+    'ask_spot.go': { en: 'Ask Spark', cn: '问 Spark', es: 'Pregunta', ko: 'Spark에게', vi: 'Hỏi Spark' },
+
+    'tryit.label': { en: 'Try it!', cn: '试一试!', es: '¡Inténtalo!', ko: '해보기!', vi: 'Thử ngay!' },
+    'tryit.hint': {
+      en: 'Give it a try, then tell Spark what happened 👇',
+      cn: '动手试试, 然后告诉 Spark 你发现了什么 👇',
+      es: 'Inténtalo y cuéntale a Spark qué pasó 👇',
+      ko: '직접 해보고 Spark에게 결과를 알려주세요 👇',
+      vi: 'Thử đi rồi kể cho Spark nghe nhé 👇'
+    }
   },
 
   init() {

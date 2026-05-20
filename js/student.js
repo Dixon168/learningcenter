@@ -402,7 +402,9 @@ const Student = {
   },
 
   appendMessageWithSvg(content) {
-    const { cleanText, svgTemplate, svgParams } = AI.parseSvgTag(content);
+    // First pull out the try-it task, then the SVG
+    const tryItParsed = AI.parseTryIt(content);
+    const { cleanText, svgTemplate, svgParams } = AI.parseSvgTag(tryItParsed.cleanText);
     const wrap = document.getElementById('chat-messages');
     const el = document.createElement('div');
     el.className = 'msg ai';
@@ -421,6 +423,19 @@ const Student = {
       }
     }
     wrap.appendChild(el);
+
+    // Render the hands-on "Try it!" card as its own highlighted block
+    if (tryItParsed.tryIt) {
+      const card = document.createElement('div');
+      card.className = 'tryit-card';
+      card.innerHTML = `
+        <div class="tryit-head"><span class="tryit-icon">🎯</span> <span class="tryit-label">${I18N.t('tryit.label')}</span></div>
+        <div class="tryit-task">${UI.escapeHtml(tryItParsed.tryIt)}</div>
+        <div class="tryit-hint">${I18N.t('tryit.hint')}</div>
+      `;
+      wrap.appendChild(card);
+    }
+
     wrap.scrollTop = wrap.scrollHeight;
   },
 

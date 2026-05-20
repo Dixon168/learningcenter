@@ -111,6 +111,12 @@ YOUR TEACHING STYLE (Socratic / guided):
 - Use 3-4 short paragraphs per reply (not a wall of text), but for very young kids use even shorter chunks.
 - Use **bold** for key terms.
 
+LEARN BY DOING — give a hands-on "try it" challenge:
+Early in teaching a new topic, give the student a small hands-on task to TRY or EXPLORE themselves — something they can do, find, guess, or experiment with. This makes learning active, not passive. Match it to their age (a young child finds toys/objects around them; an older student predicts an outcome or does a quick calculation). Encourage them to try first and tell you what happened — don't give the answer immediately.
+To show the task as a highlighted card, wrap it in a tag like this on its OWN line:
+[TRYIT: Go find something round in your room that spins — like a wheel or a jar lid. What happens when you turn it?]
+Use ONE [TRYIT:...] tag when it fits naturally (usually in your first or second message about a topic). Keep the task short, fun, and doable right now. After the student responds, react warmly and build on what they found.
+
 AGE LEVEL: (see the student's level rule at the top — always follow it)
 
 VISUAL AIDS — Include SVG diagrams when they help. End your message with ONE tag like:
@@ -128,14 +134,25 @@ Keep responses to ~150 words. Always end with a question to keep the student thi
   },
 
   parseSvgTag(text) {
-    const match = text.match(/\[SVG:(\w+)([^\]]*)\]/);
-    if (!match) return { cleanText: text, svgTemplate: null, svgParams: null };
+    // also strip any TRYIT tag so saved/clean text never shows the raw tag
+    const noTryIt = text.replace(/\[TRYIT:\s*[^\]]+\]/i, '').trim();
+    const match = noTryIt.match(/\[SVG:(\w+)([^\]]*)\]/);
+    if (!match) return { cleanText: noTryIt, svgTemplate: null, svgParams: null };
     const template = match[1];
     const paramStr = match[2] || '';
     const params = {};
     paramStr.replace(/(\w+)=(\d+)/g, (_, k, v) => { params[k] = parseInt(v); });
-    const cleanText = text.replace(match[0], '').trim();
+    const cleanText = noTryIt.replace(match[0], '').trim();
     return { cleanText, svgTemplate: template, svgParams: params };
+  },
+
+  // Extract a [TRYIT: ...] hands-on task from the message
+  parseTryIt(text) {
+    const match = text.match(/\[TRYIT:\s*([^\]]+)\]/i);
+    if (!match) return { cleanText: text, tryIt: null };
+    const tryIt = match[1].trim();
+    const cleanText = text.replace(match[0], '').trim();
+    return { cleanText, tryIt };
   },
 
   renderSvg(template, params) {

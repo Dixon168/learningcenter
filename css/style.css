@@ -1990,3 +1990,41 @@ body::before {
   .ask-spotlight-title { font-size: 15px; }
   .ask-spotlight-btn { padding: 0 14px; font-size: 13px; }
 }
+
+/* ============ Try-it hands-on card ============ */
+.tryit-card {
+  background: linear-gradient(135deg, rgba(47,93,60,0.10), rgba(201,136,60,0.08));
+  border: 2px solid var(--accent-forest);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin: 6px 0 14px;
+  max-width: 88%;
+  align-self: flex-start;
+  animation: pageIn 0.3s ease;
+}
+.tryit-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.tryit-icon { font-size: 18px; }
+.tryit-label {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent-forest);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.tryit-task {
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+.tryit-hint {
+  font-size: 12px;
+  color: var(--ink-mute);
+  font-style: italic;
+}
