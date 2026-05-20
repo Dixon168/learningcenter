@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
   bindAdminLogin();
   bindAuthTabs();
   Admin.bindEvents();
+  Teacher.bindEvents();
+  Parent.bindEvents();
+  StudentDetail.bindEvents();
   Student.bindEvents();
 
   // restore session if active
@@ -15,7 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (s) {
     if (s.role === 'admin') Admin.enter(s.user);
     else if (s.role === 'student') Student.enter(s.user);
-    // parent/teacher dashboards not built yet
+    else if (s.role === 'teacher') Teacher.enter(s.user);
+    else if (s.role === 'parent') Parent.enter(s.user);
   }
 });
 

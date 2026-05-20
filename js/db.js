@@ -245,3 +245,178 @@ Object.assign(DB, {
     return data;
   }
 });
+
+// ============================================
+// Classes / Assignments / Parent / Teacher views
+// ============================================
+
+Object.assign(DB, {
+  // ---------- Classes ----------
+  async createClass(teacherId, name, description, subjectId, ageGroup) {
+    const { data, error } = await supabase.from('lc_classes').insert({
+      teacher_id: teacherId,
+      name,
+      description: description || null,
+      subject_id: subjectId || null,
+      age_group: ageGroup || null
+    }).select().single();
+    if (error) return { error: error.message };
+    return { class: data };
+  },
+
+  async getTeacherClasses(teacherId) {
+    const { data } = await supabase.from('lc_classes')
+      .select('*, lc_subjects(name_en, name_cn, icon)')
+      .eq('teacher_id', teacherId)
+      .order('created_at', { ascending: false });
+    return data || [];
+  },
+
+  async deleteClass(classId) {
+    const { error } = await supabase.from('lc_classes').delete().eq('id', classId);
+    return !error;
+  },
+
+  async getClassStudents(classId) {
+    const { data } = await supabase.from('lc_class_students')
+      .select('student_id, joined_at, lc_students(*)')
+      .eq('class_id', classId);
+    return (data || []).map(r => ({ ...r.lc_students, joined_at: r.joined_at })).filter(s => s.id);
+  },
+
+  async addStudentToClass(classId, studentId) {
+    const { error } = await supabase.from('lc_class_students')
+      .insert({ class_id: classId, student_id: studentId });
+    if (error && !error.message.includes('duplicate')) return { error: error.message };
+    return { ok: true };
+  },
+
+  async removeStudentFromClass(classId, studentId) {
+    const { error } = await supabase.from('lc_class_students')
+      .delete().eq('class_id', classId).eq('student_id', studentId);
+    return !error;
+  },
+
+  async getTeacherStudents(teacherId) {
+    // All students across all this teacher's classes (deduped)
+    const classes = await this.getTeacherClasses(teacherId);
+    const seen = {};
+    for (const c of classes) {
+      const students = await this.getClassStudents(c.id);
+      students.forEach(s => { seen[s.id] = s; });
+    }
+    return Object.values(seen);
+  },
+
+  // ---------- Assignments ----------
+  async createAssignment({ teacherId, classId, studentId, subjectId, topic, instructions, bonusCredits }) {
+    const { data, error } = await supabase.from('lc_assignments').insert({
+      teacher_id: teacherId,
+      class_id: classId || null,
+      student_id: studentId || null,
+      subject_id: subjectId || null,
+      topic,
+      instructions: instructions || null,
+      bonus_credits: bonusCredits || 0
+    }).select().single();
+    if (error) return { error: error.message };
+    return { assignment: data };
+  },
+
+  async getTeacherAssignments(teacherId) {
+    const { data } = await supabase.from('lc_assignments')
+      .select('*, lc_classes(name), lc_students(name), lc_subjects(name_en, name_cn, icon)')
+      .eq('teacher_id', teacherId)
+      .order('created_at', { ascending: false });
+    return data || [];
+  },
+
+  async getStudentAssignments(studentId) {
+    // Assignments directly to student OR to a class the student is in
+    const { data: classRows } = await supabase.from('lc_class_students')
+      .select('class_id').eq('student_id', studentId);
+    const classIds = (classRows || []).map(r => r.class_id);
+
+    let query = supabase.from('lc_assignments')
+      .select('*, lc_subjects(name_en, name_cn, icon, slug)')
+      .order('created_at', { ascending: false });
+
+    const { data: direct } = await supabase.from('lc_assignments')
+      .select('*, lc_subjects(name_en, name_cn, icon, slug)')
+      .eq('student_id', studentId)
+      .order('created_at', { ascending: false });
+
+    let classAssignments = [];
+    if (classIds.length > 0) {
+      const { data: ca } = await supabase.from('lc_assignments')
+        .select('*, lc_subjects(name_en, name_cn, icon, slug)')
+        .in('class_id', classIds)
+        .order('created_at', { ascending: false });
+      classAssignments = ca || [];
+    }
+
+    const all = [...(direct || []), ...classAssignments];
+    const seen = {};
+    all.forEach(a => { seen[a.id] = a; });
+    return Object.values(seen);
+  },
+
+  async deleteAssignment(id) {
+    const { error } = await supabase.from('lc_assignments').delete().eq('id', id);
+    return !error;
+  },
+
+  // ---------- Student detail (for teacher/parent viewing) ----------
+  async getStudentSessions(studentId, limit = 50) {
+    const { data } = await supabase.from('lc_sessions')
+      .select('*, lc_subjects(name_en, name_cn, icon)')
+      .eq('student_id', studentId)
+      .order('started_at', { ascending: false })
+      .limit(limit);
+    return data || [];
+  },
+
+  async getStudentMistakes(studentId, limit = 50) {
+    const { data } = await supabase.from('lc_mistakes')
+      .select('*, lc_subjects(name_en, name_cn, icon)')
+      .eq('student_id', studentId)
+      .order('created_at', { ascending: false })
+      .limit(limit);
+    return data || [];
+  },
+
+  async getSessionMessages(sessionId) {
+    const { data } = await supabase.from('lc_messages')
+      .select('*')
+      .eq('session_id', sessionId)
+      .order('created_at', { ascending: true });
+    return data || [];
+  },
+
+  async getStudentStats(studentId) {
+    const [sessions, mistakes] = await Promise.all([
+      supabase.from('lc_sessions').select('status, quiz_score, quiz_total').eq('student_id', studentId),
+      supabase.from('lc_mistakes').select('id, status').eq('student_id', studentId)
+    ]);
+    const sess = sessions.data || [];
+    const completed = sess.filter(s => s.status === 'completed').length;
+    const totalCorrect = sess.reduce((sum, s) => sum + (s.quiz_score || 0), 0);
+    const totalQuestions = sess.reduce((sum, s) => sum + (s.quiz_total || 0), 0);
+    const mist = mistakes.data || [];
+    return {
+      totalSessions: sess.length,
+      completedSessions: completed,
+      totalCorrect,
+      totalQuestions,
+      accuracy: totalQuestions > 0 ? Math.round(totalCorrect / totalQuestions * 100) : 0,
+      openMistakes: mist.filter(m => m.status !== 'mastered').length
+    };
+  },
+
+  // ---------- Search students by code (for teacher add-to-class) ----------
+  async findStudentByCode(code) {
+    const { data } = await supabase.from('lc_students')
+      .select('*').eq('login_code', code.toUpperCase().trim()).maybeSingle();
+    return data;
+  }
+});

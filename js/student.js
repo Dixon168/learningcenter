@@ -68,18 +68,51 @@ const Student = {
 
   setMode(mode) {
     this.state.entryMode = mode;
+    if (mode === 'assignment') {
+      this.loadAssignments();
+      return;
+    }
     // If only mechanical is enabled, jump straight in
     DB.getEnabledSubjects().then(subjects => {
       if (subjects.length === 1) {
         this.state.subject = subjects[0];
         if (mode === 'free_question') UI.showPage('pg-ask');
         else if (mode === 'recommended') UI.showPage('pg-age-select');
-        else UI.toast('No assignments yet', '', 2000);
       } else {
-        // Multiple — let them choose subject first
         document.querySelector('.subject-section').scrollIntoView({ behavior: 'smooth' });
       }
     });
+  },
+
+  async loadAssignments() {
+    const list = await DB.getStudentAssignments(this.state.user.id);
+    if (!list || list.length === 0) {
+      UI.toast('No assignments from your teacher yet', '', 2500);
+      return;
+    }
+    // Show assignments as a simple picker using the topic grid page
+    this.state.subject = null;
+    UI.showPage('pg-topic-select');
+    document.getElementById('topic-loading').style.display = 'none';
+    const grid = document.getElementById('topic-grid');
+    document.querySelector('#pg-topic-select .page-title').innerHTML = '<em>📋</em> Assignments';
+    document.querySelector('#pg-topic-select .page-sub').textContent = 'Topics your teacher assigned';
+    grid.innerHTML = '';
+    list.forEach(a => {
+      const card = document.createElement('div');
+      card.className = 'topic-card';
+      card.innerHTML = `<div class="topic-emoji">${a.lc_subjects?.icon || '📋'}</div><div class="topic-name">${UI.escapeHtml(a.topic)}</div>${a.bonus_credits ? `<div style="font-size:11px;color:var(--accent-rust);margin-top:4px;">🎁 +${a.bonus_credits}</div>` : ''}`;
+      card.onclick = async () => {
+        // resolve subject from assignment
+        const subjects = await DB.getEnabledSubjects();
+        this.state.subject = subjects.find(s => s.id === a.subject_id) || subjects[0];
+        this.state.ageGroup = this.state.user.age_group || '11-14';
+        this.startLearning(a.topic, 'assignment');
+      };
+      grid.appendChild(card);
+    });
+    document.querySelector('.custom-topic-wrap').style.display = 'none';
+    document.getElementById('btn-refresh-topics').style.display = 'none';
   },
 
   selectAge(age) {
@@ -89,6 +122,13 @@ const Student = {
   },
 
   async loadRecommendedTopics() {
+    // restore default topic-page UI (in case assignment mode changed it)
+    document.querySelector('.custom-topic-wrap').style.display = 'flex';
+    document.getElementById('btn-refresh-topics').style.display = 'block';
+    const titleEl = document.querySelector('#pg-topic-select .page-title');
+    titleEl.innerHTML = `<em>${I18N.t('topic.title.em')}</em> ${I18N.t('topic.title')}`;
+    document.querySelector('#pg-topic-select .page-sub').textContent = I18N.t('topic.sub');
+
     const loading = document.getElementById('topic-loading');
     const grid = document.getElementById('topic-grid');
     loading.style.display = 'block';

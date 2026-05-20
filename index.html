@@ -468,6 +468,190 @@
     </div>
   </section>
 
+  <!-- ============ 老师后台 ============ -->
+  <section id="pg-teacher" class="page">
+    <div class="container admin-container">
+      <header class="top-bar">
+        <button class="back-btn" id="btn-teacher-logout">← <span data-i18n="common.logout">Log out</span></button>
+        <div class="role-chip" style="background:var(--accent-sky);color:var(--bg-cream);">
+          👨‍🏫 <span id="teacher-display-name">—</span>
+        </div>
+      </header>
+
+      <h2 class="page-title"><span data-i18n="teacher.title">Teacher</span> <em data-i18n="teacher.title.em">Dashboard</em></h2>
+
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-ttab="classes">🏫 <span data-i18n="teacher.tab.classes">Classes</span></button>
+        <button class="admin-tab" data-ttab="students">👨‍🎓 <span data-i18n="teacher.tab.students">Students</span></button>
+        <button class="admin-tab" data-ttab="assignments">📋 <span data-i18n="teacher.tab.assignments">Assignments</span></button>
+      </div>
+
+      <div id="teacher-tab-classes" class="admin-tab-content active">
+        <button id="btn-new-class" class="btn-primary"><span data-i18n="teacher.new_class">+ New Class</span></button>
+        <div id="teacher-classes-list" class="admin-list"></div>
+      </div>
+
+      <div id="teacher-tab-students" class="admin-tab-content">
+        <button id="btn-teacher-new-student" class="btn-primary"><span data-i18n="teacher.new_student">+ New Student</span></button>
+        <div id="teacher-students-list" class="admin-list"></div>
+      </div>
+
+      <div id="teacher-tab-assignments" class="admin-tab-content">
+        <button id="btn-new-assignment" class="btn-primary"><span data-i18n="teacher.new_assignment">+ New Assignment</span></button>
+        <div id="teacher-assignments-list" class="admin-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 班级详情页 -->
+  <section id="pg-class-detail" class="page">
+    <div class="container">
+      <header class="top-bar">
+        <button class="back-btn" id="btn-class-back">← <span data-i18n="common.back">Back</span></button>
+      </header>
+      <h2 class="page-title" id="class-detail-name">—</h2>
+      <p class="page-sub" id="class-detail-meta">—</p>
+
+      <div class="class-actions">
+        <button id="btn-add-existing-student" class="btn-secondary"><span data-i18n="class.add_student">+ Add existing student</span></button>
+      </div>
+
+      <h3 class="subject-section-title" data-i18n="class.students">Students in this class</h3>
+      <div id="class-students-list" class="admin-list"></div>
+    </div>
+  </section>
+
+  <!-- 学生详情页 (老师/家长共用) -->
+  <section id="pg-student-detail" class="page">
+    <div class="container">
+      <header class="top-bar">
+        <button class="back-btn" id="btn-student-detail-back">← <span data-i18n="common.back">Back</span></button>
+        <div class="user-chip">
+          <span id="sd-avatar">👤</span>
+          <span id="sd-name">—</span>
+          <span class="chip-credits">💎 <span id="sd-credits">0</span></span>
+        </div>
+      </header>
+      <h2 class="page-title" id="sd-title">—</h2>
+      <p class="page-sub" id="sd-meta">—</p>
+
+      <div class="stats-grid sd-stats">
+        <div class="stat-box"><div class="stat-num" id="sd-stat-sessions">0</div><div class="stat-label" data-i18n="sd.sessions">Topics learned</div></div>
+        <div class="stat-box"><div class="stat-num" id="sd-stat-accuracy">0%</div><div class="stat-label" data-i18n="sd.accuracy">Accuracy</div></div>
+        <div class="stat-box"><div class="stat-num" id="sd-stat-mistakes">0</div><div class="stat-label" data-i18n="sd.mistakes">Open mistakes</div></div>
+      </div>
+
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-sdtab="history">📚 <span data-i18n="sd.tab.history">History</span></button>
+        <button class="admin-tab" data-sdtab="mistakes">❌ <span data-i18n="sd.tab.mistakes">Mistakes</span></button>
+      </div>
+
+      <div id="sd-tab-history" class="admin-tab-content active">
+        <div id="sd-history-list" class="admin-list"></div>
+      </div>
+      <div id="sd-tab-mistakes" class="admin-tab-content">
+        <div id="sd-mistakes-list" class="admin-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 会话回看页 (看完整对话) -->
+  <section id="pg-session-review" class="page">
+    <div class="container chat-container">
+      <header class="top-bar">
+        <button class="back-btn" id="btn-session-back">← <span data-i18n="common.back">Back</span></button>
+        <div class="chat-header-info">
+          <div class="chat-topic" id="review-topic">—</div>
+          <div class="chat-age" id="review-meta">—</div>
+        </div>
+      </header>
+      <div id="review-messages" class="chat-messages"></div>
+    </div>
+  </section>
+
+  <!-- 新建班级对话框 -->
+  <div id="modal-new-class" class="modal">
+    <div class="modal-content">
+      <h3 data-i18n="form.new_class">Create New Class</h3>
+      <input type="text" id="nc-name" class="big-input" placeholder="Class name (e.g. Grade 7 Mechanics)"/>
+      <input type="text" id="nc-desc" class="big-input" placeholder="Description (optional)"/>
+      <select id="nc-subject" class="big-input"></select>
+      <select id="nc-age" class="big-input">
+        <option value="">Any age</option>
+        <option value="3-6">3–6</option><option value="7-10">7–10</option>
+        <option value="11-14">11–14</option><option value="15-18">15–18</option>
+        <option value="adult">Adult</option>
+      </select>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="btn-cancel-new-class" data-i18n="common.cancel">Cancel</button>
+        <button class="btn-primary" id="btn-create-class" data-i18n="form.create">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 加已有学生对话框 -->
+  <div id="modal-add-student" class="modal">
+    <div class="modal-content">
+      <h3 data-i18n="form.add_student">Add Existing Student</h3>
+      <p class="modal-sub" data-i18n="form.add_student.sub">Enter the student's login code</p>
+      <input type="text" id="as-code" class="big-input code-input" placeholder="LION-2024" maxlength="9"/>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="btn-cancel-add-student" data-i18n="common.cancel">Cancel</button>
+        <button class="btn-primary" id="btn-do-add-student" data-i18n="form.add">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 新建作业对话框 -->
+  <div id="modal-new-assignment" class="modal">
+    <div class="modal-content">
+      <h3 data-i18n="form.new_assignment">New Assignment</h3>
+      <label class="form-mini-label" data-i18n="form.assign_to">Assign to</label>
+      <select id="na-target" class="big-input"></select>
+      <label class="form-mini-label" data-i18n="form.topic">Topic</label>
+      <input type="text" id="na-topic" class="big-input" placeholder="e.g. How gears work"/>
+      <label class="form-mini-label" data-i18n="form.instructions">Instructions (optional)</label>
+      <input type="text" id="na-instructions" class="big-input" placeholder="Any notes for the student"/>
+      <label class="form-mini-label" data-i18n="form.bonus">Bonus credits on completion</label>
+      <input type="number" id="na-bonus" class="big-input" value="0" min="0"/>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="btn-cancel-new-assignment" data-i18n="common.cancel">Cancel</button>
+        <button class="btn-primary" id="btn-create-assignment" data-i18n="form.create">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 家长后台 ============ -->
+  <section id="pg-parent" class="page">
+    <div class="container admin-container">
+      <header class="top-bar">
+        <button class="back-btn" id="btn-parent-logout">← <span data-i18n="common.logout">Log out</span></button>
+        <div class="role-chip" style="background:var(--accent-ochre);color:var(--bg-cream);">
+          👨‍👩‍👧 <span id="parent-display-name">—</span>
+        </div>
+      </header>
+
+      <h2 class="page-title"><span data-i18n="parent.title">My</span> <em data-i18n="parent.title.em">Children</em></h2>
+      <p class="page-sub" data-i18n="parent.sub">Monitor your children's learning progress</p>
+
+      <button id="btn-link-child" class="btn-primary"><span data-i18n="parent.link_child">+ Link a child</span></button>
+      <div id="parent-children-list" class="children-grid"></div>
+    </div>
+  </section>
+
+  <!-- 绑定孩子对话框 -->
+  <div id="modal-link-child" class="modal">
+    <div class="modal-content">
+      <h3 data-i18n="form.link_child">Link a Child</h3>
+      <p class="modal-sub" data-i18n="form.link_child.sub">Enter your child's login code to see their progress</p>
+      <input type="text" id="lc-code" class="big-input code-input" placeholder="LION-2024" maxlength="9"/>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="btn-cancel-link-child" data-i18n="common.cancel">Cancel</button>
+        <button class="btn-primary" id="btn-do-link-child" data-i18n="form.link">Link</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div id="toast" class="toast"></div>
 
@@ -480,6 +664,8 @@
   <script src="js/svg-templates.js"></script>
   <script src="js/ai.js"></script>
   <script src="js/admin.js"></script>
+  <script src="js/teacher.js"></script>
+  <script src="js/parent.js"></script>
   <script src="js/student.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/app.js"></script>

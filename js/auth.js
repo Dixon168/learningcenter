@@ -50,7 +50,7 @@ const Auth = {
     if (parent.preferred_language) I18N.set(parent.preferred_language);
     Session.save('parent', parent);
     UI.toast(`👋 ${parent.display_name}`, 'success', 1500);
-    setTimeout(() => alert('Parent dashboard coming in next task!\nFor now: ' + parent.display_name + ' is logged in.'), 100);
+    Parent.enter(parent);
   },
 
   async signupParent() {
@@ -66,7 +66,7 @@ const Auth = {
 
     Session.save('parent', result.parent);
     UI.toast(I18N.t('msg.account_created'), 'success');
-    setTimeout(() => alert('Parent dashboard coming in next task!'), 100);
+    Parent.enter(result.parent);
   },
 
   async loginTeacher() {
@@ -79,7 +79,7 @@ const Auth = {
     if (teacher.preferred_language) I18N.set(teacher.preferred_language);
     Session.save('teacher', teacher);
     UI.toast(`👋 ${teacher.display_name}`, 'success', 1500);
-    setTimeout(() => alert('Teacher dashboard coming in next task!\nFor now: ' + teacher.display_name + ' is logged in.'), 100);
+    Teacher.enter(teacher);
   },
 
   async loginAdmin() {

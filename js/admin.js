@@ -146,7 +146,8 @@ const Admin = {
       postalCode: document.getElementById('ns-postal').value.trim() || null,
       schoolName: document.getElementById('ns-school').value.trim() || null,
       gradeLevel: document.getElementById('ns-grade').value.trim() || null,
-      createdByAdmin: Session.user?.id
+      createdByAdmin: this._createByTeacher ? null : Session.user?.id,
+      createdByTeacher: this._createByTeacher || null
     };
 
     // Use enhanced creation (with location)
@@ -155,7 +156,19 @@ const Admin = {
 
     UI.hideModal('modal-new-student');
     UI.toast(`✅ Created · Login code: ${result.student.login_code}`, 'success', 4000);
-    this.loadStudents();
+
+    // If teacher created, refresh teacher view + add to their class context if any
+    if (this._createByTeacher) {
+      this._createByTeacher = null;
+      if (typeof Teacher !== 'undefined' && Teacher.currentClassId) {
+        await DB.addStudentToClass(Teacher.currentClassId, result.student.id);
+        Teacher.loadClassStudents();
+      } else if (typeof Teacher !== 'undefined') {
+        Teacher.loadStudents();
+      }
+    } else {
+      this.loadStudents();
+    }
   },
 
   async createStudentFull(d) {
@@ -179,7 +192,8 @@ const Admin = {
       postal_code: d.postalCode,
       school_name: d.schoolName,
       grade_level: d.gradeLevel,
-      created_by_admin: d.createdByAdmin || null
+      created_by_admin: d.createdByAdmin || null,
+      created_by_teacher: d.createdByTeacher || null
     }).select().single();
     if (error) return { error: error.message };
     return { student: data };

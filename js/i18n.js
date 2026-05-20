@@ -325,7 +325,55 @@ const I18N = {
     'stat.parents': { en: 'Parents', cn: '家长数', es: 'Padres', ko: '학부모', vi: 'Phụ huynh' },
     'stat.sessions': { en: 'Sessions', cn: '学习次数', es: 'Sesiones', ko: '세션', vi: 'Phiên học' },
 
-    'subject.coming_soon': { en: 'Coming soon!', cn: '敬请期待', es: '¡Próximamente!', ko: '곧 출시', vi: 'Sắp ra mắt' }
+    'subject.coming_soon': { en: 'Coming soon!', cn: '敬请期待', es: '¡Próximamente!', ko: '곧 출시', vi: 'Sắp ra mắt' },
+
+    'common.back': { en: 'Back', cn: '返回', es: 'Atrás', ko: '뒤로', vi: 'Quay lại' },
+    'teacher.title': { en: 'Teacher', cn: '老师', es: 'Profesor', ko: '교사', vi: 'Giáo viên' },
+    'teacher.title.em': { en: 'Dashboard', cn: '后台', es: 'Panel', ko: '대시보드', vi: 'Bảng' },
+    'teacher.tab.classes': { en: 'Classes', cn: '班级', es: 'Clases', ko: '학급', vi: 'Lớp' },
+    'teacher.tab.students': { en: 'Students', cn: '学生', es: 'Estudiantes', ko: '학생', vi: 'Học sinh' },
+    'teacher.tab.assignments': { en: 'Assignments', cn: '作业', es: 'Tareas', ko: '과제', vi: 'Bài tập' },
+    'teacher.new_class': { en: '+ New Class', cn: '+ 新班级', es: '+ Nueva clase', ko: '+ 새 학급', vi: '+ Lớp mới' },
+    'teacher.new_student': { en: '+ New Student', cn: '+ 新学生', es: '+ Nuevo estudiante', ko: '+ 새 학생', vi: '+ Học sinh mới' },
+    'teacher.new_assignment': { en: '+ New Assignment', cn: '+ 布置作业', es: '+ Nueva tarea', ko: '+ 새 과제', vi: '+ Bài tập mới' },
+    'class.add_student': { en: '+ Add existing student', cn: '+ 添加已有学生', es: '+ Añadir estudiante', ko: '+ 학생 추가', vi: '+ Thêm học sinh' },
+    'class.students': { en: 'Students in this class', cn: '班级学生', es: 'Estudiantes de la clase', ko: '학급 학생', vi: 'Học sinh trong lớp' },
+
+    'parent.title': { en: 'My', cn: '我的', es: 'Mis', ko: '내', vi: 'Con' },
+    'parent.title.em': { en: 'Children', cn: '孩子', es: 'Hijos', ko: '자녀', vi: 'của tôi' },
+    'parent.sub': {
+      en: "Monitor your children's learning progress",
+      cn: '查看孩子的学习进度',
+      es: 'Sigue el progreso de tus hijos',
+      ko: '자녀의 학습 진행 상황을 확인하세요',
+      vi: 'Theo dõi tiến độ học của con bạn'
+    },
+    'parent.link_child': { en: '+ Link a child', cn: '+ 绑定孩子', es: '+ Vincular hijo', ko: '+ 자녀 연결', vi: '+ Liên kết con' },
+
+    'sd.sessions': { en: 'Topics learned', cn: '学过主题', es: 'Temas', ko: '학습 주제', vi: 'Chủ đề' },
+    'sd.accuracy': { en: 'Accuracy', cn: '正确率', es: 'Precisión', ko: '정확도', vi: 'Độ chính xác' },
+    'sd.mistakes': { en: 'Open mistakes', cn: '待复习错题', es: 'Errores', ko: '미해결 오답', vi: 'Lỗi cần xem' },
+    'sd.tab.history': { en: 'History', cn: '学习记录', es: 'Historial', ko: '기록', vi: 'Lịch sử' },
+    'sd.tab.mistakes': { en: 'Mistakes', cn: '错题本', es: 'Errores', ko: '오답', vi: 'Lỗi sai' },
+
+    'form.new_class': { en: 'Create New Class', cn: '创建班级', es: 'Crear clase', ko: '학급 생성', vi: 'Tạo lớp' },
+    'form.add_student': { en: 'Add Existing Student', cn: '添加已有学生', es: 'Añadir estudiante', ko: '학생 추가', vi: 'Thêm học sinh' },
+    'form.add_student.sub': { en: "Enter the student's login code", cn: '输入学生的登录码', es: 'Ingresa el código del estudiante', ko: '학생의 로그인 코드 입력', vi: 'Nhập mã đăng nhập của học sinh' },
+    'form.add': { en: 'Add', cn: '添加', es: 'Añadir', ko: '추가', vi: 'Thêm' },
+    'form.new_assignment': { en: 'New Assignment', cn: '布置作业', es: 'Nueva tarea', ko: '새 과제', vi: 'Bài tập mới' },
+    'form.assign_to': { en: 'Assign to', cn: '布置给', es: 'Asignar a', ko: '대상', vi: 'Giao cho' },
+    'form.topic': { en: 'Topic', cn: '主题', es: 'Tema', ko: '주제', vi: 'Chủ đề' },
+    'form.instructions': { en: 'Instructions (optional)', cn: '说明(选填)', es: 'Instrucciones', ko: '안내 (선택)', vi: 'Hướng dẫn' },
+    'form.bonus': { en: 'Bonus credits on completion', cn: '完成奖励积分', es: 'Créditos extra', ko: '완료 보너스', vi: 'Tín chỉ thưởng' },
+    'form.link_child': { en: 'Link a Child', cn: '绑定孩子', es: 'Vincular hijo', ko: '자녀 연결', vi: 'Liên kết con' },
+    'form.link_child.sub': {
+      en: "Enter your child's login code to see their progress",
+      cn: '输入孩子的登录码查看进度',
+      es: 'Ingresa el código de tu hijo',
+      ko: '자녀의 로그인 코드를 입력하세요',
+      vi: 'Nhập mã đăng nhập của con bạn'
+    },
+    'form.link': { en: 'Link', cn: '绑定', es: 'Vincular', ko: '연결', vi: 'Liên kết' }
   },
 
   init() {
