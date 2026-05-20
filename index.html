@@ -171,6 +171,32 @@
           <span>📚 <span id="cur-stat-topics">0</span> <span data-i18n="cur.topics_count">topics</span></span>
           <span>✅ <span id="cur-stat-lessons">0</span> <span data-i18n="cur.lessons_cached">lessons cached</span></span>
         </div>
+
+        <div class="batch-gen-box">
+          <h4 class="batch-gen-title">🏭 <span data-i18n="cur.batch_title">Auto-generate lessons</span></h4>
+          <p class="batch-gen-sub" data-i18n="cur.batch_sub">AI fills the library for all topics & ages. Click to generate a batch.</p>
+          <div class="batch-gen-controls">
+            <select id="batch-lang" class="big-input" style="margin-bottom:0;">
+              <option value="en">English</option>
+              <option value="cn">中文</option>
+              <option value="es">Español</option>
+              <option value="ko">한국어</option>
+              <option value="vi">Tiếng Việt</option>
+            </select>
+            <select id="batch-count" class="big-input" style="margin-bottom:0;">
+              <option value="10">10 lessons</option>
+              <option value="20" selected>20 lessons</option>
+              <option value="40">40 lessons</option>
+            </select>
+          </div>
+          <button id="btn-batch-gen" class="btn-primary btn-block" data-i18n="cur.batch_btn">Generate batch</button>
+          <div id="batch-progress" class="batch-progress" style="display:none;">
+            <div class="batch-progress-text" id="batch-progress-text">—</div>
+            <div class="batch-progress-track"><div class="batch-progress-fill" id="batch-progress-fill"></div></div>
+            <button id="btn-batch-cancel" class="btn-text" data-i18n="cur.batch_cancel">Cancel</button>
+          </div>
+        </div>
+
         <button id="btn-add-topic" class="btn-primary"><span data-i18n="cur.add_topic">+ Add Topic</span></button>
         <div id="admin-curriculum-list" class="admin-list"></div>
       </div>
@@ -805,6 +831,7 @@
   <script src="js/svg-templates.js"></script>
   <script src="js/ai.js"></script>
   <script src="js/game.js"></script>
+  <script src="js/generator.js"></script>
   <script src="js/admin.js"></script>
   <script src="js/teacher.js"></script>
   <script src="js/parent.js"></script>

@@ -60,6 +60,45 @@ const Admin = {
     }
   },
 
+  async runBatchGen() {
+    if (!this._curSubject) { UI.toast('Open the Curriculum tab first', 'error'); return; }
+    if (Generator.running) { UI.toast('Already generating...', '', 1500); return; }
+
+    const lang = document.getElementById('batch-lang').value;
+    const count = parseInt(document.getElementById('batch-count').value) || 20;
+
+    const progressBox = document.getElementById('batch-progress');
+    const progressText = document.getElementById('batch-progress-text');
+    const progressFill = document.getElementById('batch-progress-fill');
+    const genBtn = document.getElementById('btn-batch-gen');
+
+    progressBox.style.display = 'block';
+    genBtn.disabled = true;
+    progressText.textContent = 'Starting...';
+    progressFill.style.width = '0%';
+
+    const result = await Generator.runBatch(this._curSubject, lang, count, (p) => {
+      const pct = p.total > 0 ? Math.round(p.done / p.total * 100) : 0;
+      progressFill.style.width = pct + '%';
+      progressText.textContent = `${p.done}/${p.total} · ${p.current}`;
+    });
+
+    genBtn.disabled = false;
+
+    if (result.error === 'already_running') {
+      UI.toast('Already running', '', 1500);
+      return;
+    }
+    if (result.allDone || (result.generated === 0 && result.remaining === 0)) {
+      progressText.textContent = '🎉 All lessons generated for this language!';
+      UI.toast('🎉 Library complete for this language!', 'success', 3000);
+    } else {
+      progressText.textContent = `✅ Generated ${result.generated} · ${result.remaining} still to go`;
+      UI.toast(`✅ Generated ${result.generated} lessons`, 'success', 3000);
+    }
+    this.loadCurriculum();
+  },
+
   async loadStudents() {
     const wrap = document.getElementById('admin-students-list');
     wrap.innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
@@ -350,5 +389,9 @@ const Admin = {
 
     const addTopicBtn = document.getElementById('btn-add-topic');
     if (addTopicBtn) addTopicBtn.onclick = () => this.addTopic();
+    const batchBtn = document.getElementById('btn-batch-gen');
+    if (batchBtn) batchBtn.onclick = () => this.runBatchGen();
+    const batchCancel = document.getElementById('btn-batch-cancel');
+    if (batchCancel) batchCancel.onclick = () => { Generator.cancel(); UI.toast('Cancelling...', '', 1500); };
   }
 };

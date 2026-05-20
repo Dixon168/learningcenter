@@ -758,5 +758,34 @@ Object.assign(DB, {
     const { count: cached } = await supabase.from('lc_lessons')
       .select('*', { count: 'exact', head: true }).eq('subject_id', subjectId);
     return { topics: total || 0, lessons: cached || 0 };
+  },
+
+  // Find topic×age combos that have NO cached lesson yet (for a given language)
+  // Each topic generates for the age groups its unit targets.
+  async getMissingLessons(subjectId, language) {
+    const units = await this.getUnits(subjectId);
+    const topics = await this.getAllTopicsForSubject(subjectId);
+    // map unit -> age_groups
+    const unitAges = {};
+    units.forEach(u => { unitAges[u.id] = (u.age_groups && u.age_groups.length) ? u.age_groups : ['7-10','11-14']; });
+
+    // existing lessons set
+    const { data: existing } = await supabase.from('lc_lessons')
+      .select('topic_title, age_group, language')
+      .eq('subject_id', subjectId)
+      .eq('language', language);
+    const have = new Set((existing || []).map(l => `${l.topic_title}|||${l.age_group}`));
+
+    const missing = [];
+    topics.forEach(t => {
+      const ages = unitAges[t.unit_id] || ['7-10','11-14'];
+      ages.forEach(age => {
+        const key = `${t.title_en}|||${age}`;
+        if (!have.has(key)) {
+          missing.push({ topicId: t.id, title: t.title_en, titleCn: t.title_cn, ageGroup: age });
+        }
+      });
+    });
+    return missing;
   }
 });

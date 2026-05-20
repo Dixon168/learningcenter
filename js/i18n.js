@@ -446,7 +446,17 @@ const I18N = {
     'admin.tab.curriculum': { en: 'Curriculum', cn: '课程', es: 'Currículo', ko: '커리큘럼', vi: 'Chương trình' },
     'cur.topics_count': { en: 'topics', cn: '主题', es: 'temas', ko: '주제', vi: 'chủ đề' },
     'cur.lessons_cached': { en: 'lessons cached', cn: '已缓存课程', es: 'lecciones', ko: '저장된 수업', vi: 'bài đã lưu' },
-    'cur.add_topic': { en: '+ Add Topic', cn: '+ 添加主题', es: '+ Añadir tema', ko: '+ 주제 추가', vi: '+ Thêm chủ đề' }
+    'cur.add_topic': { en: '+ Add Topic', cn: '+ 添加主题', es: '+ Añadir tema', ko: '+ 주제 추가', vi: '+ Thêm chủ đề' },
+    'cur.batch_title': { en: 'Auto-generate lessons', cn: '自动生成课程', es: 'Generar lecciones', ko: '수업 자동 생성', vi: 'Tự tạo bài học' },
+    'cur.batch_sub': {
+      en: 'AI fills the library for all topics & ages. Click to generate a batch.',
+      cn: 'AI 为所有主题和年龄填充课程库, 点击生成一批',
+      es: 'La IA llena la biblioteca. Haz clic para generar.',
+      ko: 'AI가 모든 주제와 연령대의 라이브러리를 채웁니다.',
+      vi: 'AI điền thư viện cho mọi chủ đề và độ tuổi.'
+    },
+    'cur.batch_btn': { en: 'Generate batch', cn: '生成一批', es: 'Generar lote', ko: '일괄 생성', vi: 'Tạo loạt' },
+    'cur.batch_cancel': { en: 'Cancel', cn: '取消', es: 'Cancelar', ko: '취소', vi: 'Hủy' }
   },
 
   init() {
