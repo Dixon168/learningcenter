@@ -481,6 +481,100 @@ const I18N = {
       es: 'Inténtalo y cuéntale a Spark qué pasó 👇',
       ko: '직접 해보고 Spark에게 결과를 알려주세요 👇',
       vi: 'Thử đi rồi kể cho Spark nghe nhé 👇'
+    },
+
+    'lp.nav.why': { en: 'Why us', cn: '为什么选我们', es: 'Por qué', ko: '특징', vi: 'Vì sao' },
+    'lp.nav.how': { en: 'How it works', cn: '怎么用', es: 'Cómo funciona', ko: '이용 방법', vi: 'Cách dùng' },
+    'lp.nav.about': { en: 'About', cn: '关于', es: 'Nosotros', ko: '소개', vi: 'Giới thiệu' },
+    'lp.login': { en: 'Log in', cn: '登录', es: 'Entrar', ko: '로그인', vi: 'Đăng nhập' },
+    'lp.eyebrow': { en: '⚡ AI guided learning', cn: '⚡ AI 引导式学习', es: '⚡ Aprendizaje guiado por IA', ko: '⚡ AI 가이드 학습', vi: '⚡ Học cùng AI' },
+    'lp.hero.title': {
+      en: 'Learn to <em>understand</em>,<br>not just to answer.',
+      cn: '学会<em>理解</em>,<br>而不只是答对。',
+      es: 'Aprender a <em>entender</em>,<br>no solo a responder.',
+      ko: '<em>이해</em>하는 법을 배워요,<br>단순히 답만 맞히지 않고.',
+      vi: 'Học để <em>hiểu</em>,<br>không chỉ để trả lời.'
+    },
+    'lp.hero.sub': {
+      en: 'A personal AI tutor that guides every child to discover how things really work — at their own pace, in their own language.',
+      cn: '一位私人 AI 导师, 引导每个孩子发现事物的真正原理 —— 用自己的节奏, 自己的语言。',
+      es: 'Un tutor de IA personal que guía a cada niño a descubrir cómo funcionan las cosas — a su ritmo y en su idioma.',
+      ko: '모든 아이가 사물의 원리를 스스로 발견하도록 이끄는 개인 AI 튜터 — 자신의 속도와 언어로.',
+      vi: 'Gia sư AI riêng giúp mỗi trẻ khám phá cách mọi thứ vận hành — theo nhịp độ và ngôn ngữ của mình.'
+    },
+    'lp.hero.cta': { en: 'Start learning free', cn: '免费开始学习', es: 'Empieza gratis', ko: '무료로 시작하기', vi: 'Học miễn phí' },
+    'lp.hero.cta2': { en: 'See how it works', cn: '看看怎么用', es: 'Ver cómo funciona', ko: '이용 방법 보기', vi: 'Xem cách dùng' },
+    'lp.stat.langs': { en: 'languages', cn: '种语言', es: 'idiomas', ko: '개 언어', vi: 'ngôn ngữ' },
+    'lp.stat.ages': { en: 'age levels', cn: '个年龄段', es: 'niveles de edad', ko: '연령대', vi: 'cấp độ tuổi' },
+    'lp.stat.topics': { en: 'topics to explore', cn: '主题任你探索', es: 'temas por explorar', ko: '탐구 주제', vi: 'chủ đề khám phá' },
+    'lp.why.kicker': { en: 'Why Learning Center', cn: '为什么选 Learning Center', es: 'Por qué Learning Center', ko: 'Learning Center를 선택하는 이유', vi: 'Vì sao chọn Learning Center' },
+    'lp.why.title': { en: 'Not another homework app', cn: '这不是又一个作业 App', es: 'No es otra app de tareas', ko: '평범한 숙제 앱이 아닙니다', vi: 'Không phải app làm bài tập thường' },
+    'lp.why.1.t': { en: 'Understanding, not memorizing', cn: '理解, 而非死记', es: 'Entender, no memorizar', ko: '암기가 아닌 이해', vi: 'Hiểu, không học vẹt' },
+    'lp.why.1.d': {
+      en: 'Spark, your AI tutor, asks questions and guides discovery — so kids truly get the "why", not just the answer.',
+      cn: 'AI 导师 Spark 会提问、引导发现 —— 让孩子真正懂"为什么", 而不只是答案。',
+      es: 'Spark, tu tutor de IA, hace preguntas y guía el descubrimiento — para que los niños entiendan el "porqué".',
+      ko: 'AI 튜터 Spark가 질문하고 발견을 이끌어 아이가 "왜"를 진짜로 이해하게 합니다.',
+      vi: 'Gia sư AI Spark đặt câu hỏi và dẫn dắt khám phá — để trẻ thật sự hiểu "vì sao".'
+    },
+    'lp.why.2.t': { en: 'Built for every age', cn: '适合每个年龄', es: 'Para todas las edades', ko: '모든 연령을 위해', vi: 'Cho mọi lứa tuổi' },
+    'lp.why.2.d': {
+      en: 'From a curious 5-year-old to an adult learner — every explanation, example, and quiz adapts to the right level.',
+      cn: '从好奇的 5 岁孩子到成人学习者 —— 每个讲解、例子、测验都按合适的程度调整。',
+      es: 'Desde un niño de 5 años hasta un adulto — cada explicación y examen se adapta al nivel correcto.',
+      ko: '호기심 많은 5세부터 성인 학습자까지 — 설명, 예시, 퀴즈가 알맞은 수준에 맞춰집니다.',
+      vi: 'Từ bé 5 tuổi đến người lớn — mọi giải thích, ví dụ, bài kiểm tra đều vừa trình độ.'
+    },
+    'lp.why.3.t': { en: 'Kids actually want to come back', cn: '孩子真的想每天回来', es: 'Los niños quieren volver', ko: '아이가 매일 다시 찾아요', vi: 'Trẻ muốn quay lại mỗi ngày' },
+    'lp.why.3.d': {
+      en: 'Levels, daily rewards, streaks and a friendly AI companion turn learning into something kids look forward to.',
+      cn: '等级、每日奖励、连续打卡和友好的 AI 伙伴, 让学习变成孩子期待的事。',
+      es: 'Niveles, recompensas diarias y un compañero de IA hacen del aprendizaje algo que los niños esperan.',
+      ko: '레벨, 일일 보상, 연속 학습, 친근한 AI 친구가 학습을 기다려지는 일로 만듭니다.',
+      vi: 'Cấp độ, phần thưởng mỗi ngày, chuỗi học và người bạn AI khiến trẻ mong được học.'
+    },
+    'lp.why.4.t': { en: 'Parents see real progress', cn: '家长看得见真实进步', es: 'Los padres ven el progreso', ko: '부모가 실제 성장을 봅니다', vi: 'Phụ huynh thấy tiến bộ thật' },
+    'lp.why.4.d': {
+      en: 'After every lesson, parents get an honest report on strengths, gaps, and exactly what to work on next.',
+      cn: '每节课后, 家长会收到诚实的报告: 强项、薄弱点, 以及下一步该练什么。',
+      es: 'Tras cada lección, los padres reciben un informe honesto de fortalezas y qué reforzar.',
+      ko: '수업마다 부모는 강점, 부족한 점, 다음에 무엇을 할지 솔직한 보고서를 받습니다.',
+      vi: 'Sau mỗi bài, phụ huynh nhận báo cáo trung thực về điểm mạnh, điểm yếu và việc cần làm tiếp.'
+    },
+    'lp.how.kicker': { en: 'How it works', cn: '怎么用', es: 'Cómo funciona', ko: '이용 방법', vi: 'Cách hoạt động' },
+    'lp.how.title': { en: 'Curiosity in, mastery out', cn: '带着好奇来, 带着掌握走', es: 'Curiosidad que se vuelve dominio', ko: '호기심이 실력으로', vi: 'Tò mò vào, thành thạo ra' },
+    'lp.how.1.t': { en: 'Ask anything', cn: '问任何问题', es: 'Pregunta lo que sea', ko: '무엇이든 질문', vi: 'Hỏi bất cứ điều gì' },
+    'lp.how.1.d': {
+      en: '"How does a gear work?" Pick from the course map or just ask whatever sparks curiosity.',
+      cn: '"齿轮怎么工作?" 从课程地图里选, 或直接问任何让你好奇的事。',
+      es: '"¿Cómo funciona un engranaje?" Elige del mapa del curso o pregunta lo que te dé curiosidad.',
+      ko: '"기어는 어떻게 작동하나요?" 코스 맵에서 고르거나 궁금한 걸 바로 물어보세요.',
+      vi: '"Bánh răng hoạt động ra sao?" Chọn từ bản đồ khóa học hoặc hỏi điều bạn tò mò.'
+    },
+    'lp.how.2.t': { en: 'Learn by doing', cn: '在动手中学', es: 'Aprende haciendo', ko: '직접 해보며 배우기', vi: 'Học qua thực hành' },
+    'lp.how.2.d': {
+      en: 'Spark explains step by step, draws diagrams, and gives hands-on challenges to try.',
+      cn: 'Spark 一步步讲解、画图, 还会给你动手挑战去试。',
+      es: 'Spark explica paso a paso, dibuja diagramas y propone retos prácticos.',
+      ko: 'Spark가 단계별로 설명하고 그림을 그리며 직접 해볼 과제를 줍니다.',
+      vi: 'Spark giải thích từng bước, vẽ sơ đồ và đưa thử thách thực hành.'
+    },
+    'lp.how.3.t': { en: 'Prove it & level up', cn: '验证理解, 升级', es: 'Demuéstralo y sube de nivel', ko: '확인하고 레벨업', vi: 'Chứng minh & lên cấp' },
+    'lp.how.3.d': {
+      en: 'A short quiz checks understanding, earns rewards, and feeds a progress report for parents.',
+      cn: '一个小测验检验理解、赚取奖励, 并生成给家长的进度报告。',
+      es: 'Un breve examen comprueba la comprensión, da recompensas y genera un informe.',
+      ko: '짧은 퀴즈로 이해를 확인하고 보상을 얻으며 부모용 보고서를 만듭니다.',
+      vi: 'Bài kiểm tra ngắn kiểm tra hiểu biết, nhận thưởng và tạo báo cáo cho phụ huynh.'
+    },
+    'lp.login.kicker': { en: 'Get started', cn: '开始使用', es: 'Empezar', ko: '시작하기', vi: 'Bắt đầu' },
+    'lp.login.title': { en: "Who's learning today?", cn: '今天谁来学习?', es: '¿Quién aprende hoy?', ko: '오늘은 누가 배우나요?', vi: 'Hôm nay ai học?' },
+    'lp.about.mission': {
+      en: 'We believe every child is naturally curious. Our mission is to turn that curiosity into deep understanding — with an AI tutor that has the patience of a great teacher and the warmth of a friend.',
+      cn: '我们相信每个孩子天生好奇。我们的使命是把这份好奇变成深刻的理解 —— 用一位拥有好老师的耐心、朋友的温暖的 AI 导师。',
+      es: 'Creemos que todo niño es curioso por naturaleza. Nuestra misión es convertir esa curiosidad en comprensión profunda con un tutor de IA paciente y cálido.',
+      ko: '우리는 모든 아이가 본래 호기심이 많다고 믿습니다. 좋은 선생님의 인내와 친구의 따뜻함을 지닌 AI 튜터로 그 호기심을 깊은 이해로 바꾸는 것이 우리의 사명입니다.',
+      vi: 'Chúng tôi tin mọi trẻ đều tò mò bẩm sinh. Sứ mệnh của chúng tôi là biến sự tò mò ấy thành hiểu biết sâu sắc — với gia sư AI kiên nhẫn như thầy giỏi và ấm áp như một người bạn.'
     }
   },
 
@@ -518,6 +612,12 @@ const I18N = {
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.dataset.i18n;
       el.textContent = this.t(key);
+    });
+
+    // Translations that legitimately contain inline HTML (e.g. <em>, <br>)
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const key = el.dataset.i18nHtml;
+      el.innerHTML = this.t(key);
     });
 
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {

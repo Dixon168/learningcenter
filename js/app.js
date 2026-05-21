@@ -53,6 +53,16 @@ function bindRoleCards() {
   document.querySelectorAll('.page-back').forEach(btn => {
     btn.onclick = () => UI.showPage(btn.dataset.back);
   });
+
+  // Landing page CTA buttons
+  const scrollToLogin = () => {
+    const el = document.getElementById('lp-login');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+  const topLogin = document.getElementById('lp-login-top');
+  if (topLogin) topLogin.onclick = scrollToLogin;
+  const startBtn = document.getElementById('lp-start-learning');
+  if (startBtn) startBtn.onclick = () => UI.showPage('pg-student-login');
 }
 
 function bindStudentLogin() {

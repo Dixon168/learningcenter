@@ -10,30 +10,122 @@
 <body>
 
   <!-- ============ 主页: 四角色入口 ============ -->
-  <section id="pg-home" class="page active">
-    <!-- 语言切换 (右上角) -->
-    <div class="lang-switcher">
-      <button class="lang-btn" id="lang-toggle">
-        <span id="lang-current-flag">🇬🇧</span>
-        <span id="lang-current-name">English</span>
-        <span class="lang-chevron">▾</span>
-      </button>
-      <div class="lang-dropdown" id="lang-dropdown">
-        <button class="lang-option" data-lang="en"><span>🇬🇧</span> English</button>
-        <button class="lang-option" data-lang="cn"><span>🇨🇳</span> 中文</button>
-        <button class="lang-option" data-lang="es"><span>🇪🇸</span> Español</button>
-        <button class="lang-option" data-lang="ko"><span>🇰🇷</span> 한국어</button>
-        <button class="lang-option" data-lang="vi"><span>🇻🇳</span> Tiếng Việt</button>
+  <section id="pg-home" class="page active landing">
+    <!-- ===== 顶部导航栏 ===== -->
+    <nav class="lp-nav">
+      <div class="lp-nav-inner">
+        <a class="lp-brand" href="#lp-top">
+          <span class="lp-logo">LC</span>
+          <span class="lp-brand-name">Learning <em>Center</em></span>
+        </a>
+        <div class="lp-nav-links">
+          <a href="#lp-why" data-i18n="lp.nav.why">Why us</a>
+          <a href="#lp-how" data-i18n="lp.nav.how">How it works</a>
+          <a href="#lp-about" data-i18n="lp.nav.about">About</a>
+        </div>
+        <div class="lp-nav-right">
+          <!-- 语言切换 -->
+          <div class="lang-switcher">
+            <button class="lang-btn" id="lang-toggle">
+              <span id="lang-current-flag">🇬🇧</span>
+              <span id="lang-current-name">English</span>
+              <span class="lang-chevron">▾</span>
+            </button>
+            <div class="lang-dropdown" id="lang-dropdown">
+              <button class="lang-option" data-lang="en"><span>🇬🇧</span> English</button>
+              <button class="lang-option" data-lang="cn"><span>🇨🇳</span> 中文</button>
+              <button class="lang-option" data-lang="es"><span>🇪🇸</span> Español</button>
+              <button class="lang-option" data-lang="ko"><span>🇰🇷</span> 한국어</button>
+              <button class="lang-option" data-lang="vi"><span>🇻🇳</span> Tiếng Việt</button>
+            </div>
+          </div>
+          <button class="lp-login-btn" id="lp-login-top" data-i18n="lp.login">Log in</button>
+        </div>
       </div>
-    </div>
+    </nav>
 
-    <div class="container">
-      <header class="brand-header">
-        <div class="logo-mark">LC</div>
-        <h1 class="brand-title">Learning <em>Center</em></h1>
-        <p class="brand-sub" data-i18n="tagline">Teach to understand · not just to answer</p>
-      </header>
+    <!-- ===== Hero 主视觉 ===== -->
+    <header id="lp-top" class="lp-hero">
+      <div class="lp-hero-glow"></div>
+      <div class="lp-hero-inner">
+        <span class="lp-eyebrow" data-i18n="lp.eyebrow">⚡ AI guided learning</span>
+        <h1 class="lp-hero-title" data-i18n-html="lp.hero.title">Learn to <em>understand</em>,<br>not just to answer.</h1>
+        <p class="lp-hero-sub" data-i18n="lp.hero.sub">A personal AI tutor that guides every child to discover how things really work — at their own pace, in their own language.</p>
+        <div class="lp-hero-cta">
+          <button class="lp-btn-primary" id="lp-start-learning" data-i18n="lp.hero.cta">Start learning free</button>
+          <a class="lp-btn-ghost" href="#lp-how" data-i18n="lp.hero.cta2">See how it works</a>
+        </div>
+        <div class="lp-hero-stats">
+          <div class="lp-stat"><span class="lp-stat-num">5</span><span class="lp-stat-label" data-i18n="lp.stat.langs">languages</span></div>
+          <div class="lp-stat"><span class="lp-stat-num">5</span><span class="lp-stat-label" data-i18n="lp.stat.ages">age levels</span></div>
+          <div class="lp-stat"><span class="lp-stat-num">∞</span><span class="lp-stat-label" data-i18n="lp.stat.topics">topics to explore</span></div>
+        </div>
+      </div>
+    </header>
 
+    <!-- ===== Why us 差异化卖点 ===== -->
+    <section id="lp-why" class="lp-section">
+      <div class="lp-section-head">
+        <span class="lp-kicker" data-i18n="lp.why.kicker">Why Learning Center</span>
+        <h2 class="lp-section-title" data-i18n="lp.why.title">Not another homework app</h2>
+      </div>
+      <div class="lp-why-grid">
+        <div class="lp-feature">
+          <div class="lp-feature-icon">🧠</div>
+          <h3 data-i18n="lp.why.1.t">Understanding, not memorizing</h3>
+          <p data-i18n="lp.why.1.d">Spark, your AI tutor, asks questions and guides discovery — so kids truly get the "why", not just the answer.</p>
+        </div>
+        <div class="lp-feature">
+          <div class="lp-feature-icon">🎯</div>
+          <h3 data-i18n="lp.why.2.t">Built for every age</h3>
+          <p data-i18n="lp.why.2.d">From a curious 5-year-old to an adult learner — every explanation, example, and quiz adapts to the right level.</p>
+        </div>
+        <div class="lp-feature">
+          <div class="lp-feature-icon">🎮</div>
+          <h3 data-i18n="lp.why.3.t">Kids actually want to come back</h3>
+          <p data-i18n="lp.why.3.d">Levels, daily rewards, streaks and a friendly AI companion turn learning into something kids look forward to.</p>
+        </div>
+        <div class="lp-feature">
+          <div class="lp-feature-icon">📊</div>
+          <h3 data-i18n="lp.why.4.t">Parents see real progress</h3>
+          <p data-i18n="lp.why.4.d">After every lesson, parents get an honest report on strengths, gaps, and exactly what to work on next.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== How it works ===== -->
+    <section id="lp-how" class="lp-section lp-section-alt">
+      <div class="lp-section-head">
+        <span class="lp-kicker" data-i18n="lp.how.kicker">How it works</span>
+        <h2 class="lp-section-title" data-i18n="lp.how.title">Curiosity in, mastery out</h2>
+      </div>
+      <div class="lp-steps">
+        <div class="lp-step">
+          <div class="lp-step-num">1</div>
+          <h3 data-i18n="lp.how.1.t">Ask anything</h3>
+          <p data-i18n="lp.how.1.d">"How does a gear work?" Pick from the course map or just ask whatever sparks curiosity.</p>
+        </div>
+        <div class="lp-step-arrow">→</div>
+        <div class="lp-step">
+          <div class="lp-step-num">2</div>
+          <h3 data-i18n="lp.how.2.t">Learn by doing</h3>
+          <p data-i18n="lp.how.2.d">Spark explains step by step, draws diagrams, and gives hands-on challenges to try.</p>
+        </div>
+        <div class="lp-step-arrow">→</div>
+        <div class="lp-step">
+          <div class="lp-step-num">3</div>
+          <h3 data-i18n="lp.how.3.t">Prove it & level up</h3>
+          <p data-i18n="lp.how.3.d">A short quiz checks understanding, earns rewards, and feeds a progress report for parents.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 登录入口 (四角色) ===== -->
+    <section id="lp-login" class="lp-section">
+      <div class="lp-section-head">
+        <span class="lp-kicker" data-i18n="lp.login.kicker">Get started</span>
+        <h2 class="lp-section-title" data-i18n="lp.login.title">Who's learning today?</h2>
+      </div>
       <div class="role-grid">
         <button class="role-card" data-role="student">
           <div class="role-icon">🎓</div>
@@ -51,9 +143,19 @@
           <p data-i18n="role.teacher.desc">Manage classes and assignments</p>
         </button>
       </div>
+    </section>
 
-      <p class="home-footnote" data-i18n="home.footnote">An AI guided learning system · powered by curiosity</p>
-    </div>
+    <!-- ===== About / Footer ===== -->
+    <footer id="lp-about" class="lp-footer">
+      <div class="lp-footer-inner">
+        <div class="lp-footer-brand">
+          <span class="lp-logo">LC</span>
+          <h3 class="brand-title">Learning <em>Center</em></h3>
+          <p class="lp-footer-mission" data-i18n="lp.about.mission">We believe every child is naturally curious. Our mission is to turn that curiosity into deep understanding — with an AI tutor that has the patience of a great teacher and the warmth of a friend.</p>
+        </div>
+        <p class="lp-footer-note" data-i18n="home.footnote">An AI guided learning system · powered by curiosity</p>
+      </div>
+    </footer>
 
     <button id="admin-gear" class="admin-gear" title="Admin">⚙</button>
   </section>
